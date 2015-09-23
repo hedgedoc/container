@@ -1,0 +1,18 @@
+db-postgres:
+  image: postgres
+  environment:
+    - POSTGRES_USER=hackmd
+    - POSTGRES_PASSWORD=hackmdpass
+db-mongo:
+  image: mongo
+hackmd:
+  build: hackmd
+  environment:
+    - POSTGRES_USER=hackmd
+    - PGPASSWORD=hackmdpass
+  links:
+    - db-postgres
+    - db-mongo
+  ports:
+    - "3000:3000"
+
