@@ -14,5 +14,6 @@ vim hackmd/config.js ## if you need to change any config
 docker-compose up ## this might take times
 ```
 
-The default port is 3000
-**Happy HackMD**
+The default port is 3000  
+
+**Happy HackMD :smile:**
