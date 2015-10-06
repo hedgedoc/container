@@ -8,7 +8,7 @@ docker-hackmd
 
 ## Usage
 ```bash
-git clone https://github.com/hackmd/docker-hackmd.git ## clone to local
+git clone https://github.com/hackmdio/docker-hackmd.git ## clone to local
 cd docker-hackmd ## enter the directory
 vim hackmd/config.js ## if you need to change any config
 docker-compose up ## this might take times
