@@ -13,11 +13,15 @@ RUN apt-get install -y git
 RUN mkdir /hackmd
 WORKDIR /hackmd
 RUN git clone https://github.com/hackmdio/hackmd.git /hackmd
-RUN git checkout 9586e2057f9ede5c0514ecf5f44b72b88e3c6129
+RUN git checkout 16dcd27b780fe47ceffa43678ae0aec3fbf735c7
 
 # npm, deps
 RUN apt-get install -y python build-essential make gcc g++ libkrb5-dev
 RUN npm install
+
+# bower
+RUN npm install -g bower
+RUN bower install --allow-root
 
 # add config
 ADD config.js /hackmd/config.js
