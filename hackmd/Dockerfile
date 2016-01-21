@@ -13,7 +13,7 @@ RUN apt-get install -y git
 RUN mkdir /hackmd
 WORKDIR /hackmd
 RUN git clone https://github.com/hackmdio/hackmd.git /hackmd
-RUN git checkout 98a8640edb8e4aac003601269166d981d04bded0
+RUN git checkout 018beab583b5affb59321762388e376d5f123b0f
 
 # npm, deps
 RUN apt-get install -y python build-essential make gcc g++ libkrb5-dev
