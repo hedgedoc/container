@@ -3,8 +3,8 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get -y upgrade && apt-get install -y apt-utils curl vim
 
 # nodejs, npm
-RUN apt-get install -y nodejs nodejs-legacy
-RUN curl -L https://npmjs.org/install.sh | sh
+RUN curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
+RUN sudo apt-get install -y nodejs nodejs-legacy
 
 # git
 RUN apt-get install -y git
