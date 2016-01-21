@@ -22,4 +22,13 @@ docker-compose up ## this might take some time
 
 The default port is 3000  
 
+## Update
+
+```bash
+cd docker-hackmd ## enter the directory
+git pull ## pull new commits
+docker-compose build --no-cache ## rebuild container
+docker-compose up ## turn on
+```
+
 **Happy HackMD :smile:**
