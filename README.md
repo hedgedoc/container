@@ -3,7 +3,9 @@ docker-hackmd
 
 ## Require
 * docker (docker toolbox recommended)
-* docker-compose (Windows user might need [this](http://stackoverflow.com/questions/29289785/how-to-install-docker-compose-on-windows))
+* docker-compose
+
+See more here: https://www.docker.com/docker-toolbox
 
 
 ## Usage
