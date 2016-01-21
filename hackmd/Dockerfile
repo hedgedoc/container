@@ -4,7 +4,7 @@ RUN apt-get update && apt-get -y upgrade && apt-get install -y apt-utils curl vi
 
 # nodejs, npm
 RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
-RUN apt-get install -y nodejs nodejs-legacy
+RUN apt-get install -y nodejs
 
 # git
 RUN apt-get install -y git
