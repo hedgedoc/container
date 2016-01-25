@@ -53,6 +53,6 @@ CONTAINER ID        IMAGE                 COMMAND                  CREATED      
 ```bash
 ➜  ~  docker exec 48d90ef50ef6 mongodump -d hackmd -o mongodb_backup
 ```
-- That's it!
+- copy your backup out of container by `docker cp <container_id>:<backup_path> <host_path>`
 
 **Happy HackMD :smile:**
