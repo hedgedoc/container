@@ -24,11 +24,35 @@ The default port is 3000
 
 ## Update
 
+Start your docker and enter the terminal, follow below commands:
+
 ```bash
 cd docker-hackmd ## enter the directory
 git pull ## pull new commits
 docker-compose build --no-cache ## rebuild container
 docker-compose up ## turn on
 ```
+
+## Backup
+
+Start your docker and enter the terminal, follow below commands:
+
+1. run `docker ps` to check all your containers
+```bash
+➜  ~  docker ps
+CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                    NAMES
+2c04d7b1b8d4        dockerhackmd_hackmd   "/bin/bash /hackmd/do"   3 days ago          Up 17 seconds       0.0.0.0:3000->3000/tcp   dockerhackmd_hackmd_1
+48d90ef50ef6        mongo                 "/entrypoint.sh mongo"   3 days ago          Up 18 seconds       27017/tcp                dockerhackmd_db-mongo_1
+4949b888c1cb        postgres              "/docker-entrypoint.s"   3 days ago          Up 18 seconds       5432/tcp                 dockerhackmd_db-postgres_1
+```
+2. backup postgresql by `docker exec <postgresql_container_id> pg_dump hackmd -U postgres > <postgresql_backup_name>`
+```bash
+➜  ~  docker exec 4949b888c1cb pg_dump hackmd -U postgres > postgresql_backup.sql
+```
+3. backup monogodb by `docker exec <monogodb_container_id> mongodump -d hackmd -o <monogodb_backup_name>`
+```bash
+➜  ~  docker exec 48d90ef50ef6 mongodump -d hackmd -o mongodb_backup
+```
+4. That's it!
 
 **Happy HackMD :smile:**
