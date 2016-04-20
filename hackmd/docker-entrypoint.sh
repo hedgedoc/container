@@ -1,11 +1,7 @@
 #!/bin/dash
 
-
-sleep 10
-
-# setting databse
-createdb -h db-postgres -U $POSTGRES_USER -O hackmd hackmd
-psql -h db-postgres -U $POSTGRES_USER hackmd < ./hackmd_schema.sql 
+# wait for db up
+sleep 3
 
 # run
-nodejs app.js
+NODE_ENV='production' node app.js
