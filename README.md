@@ -2,24 +2,20 @@ docker-hackmd
 ===
 
 ## Prerequisite
+* git
 * docker (docker toolbox recommended)
-* docker-compose
+* docker-compose (included in the docker toolbox)
 
 See more here: https://www.docker.com/docker-toolbox
 
 ## Get started
 
-Start your docker and enter the terminal, follow below commands:
-
-```bash
-git clone https://github.com/hackmdio/docker-hackmd.git ## clone to local
-cd docker-hackmd ## enter the directory
-vim docker-compose.yml ## if you need to change any db password or name
-vim hackmd/config.json ## if you need to change any config (when you change the db things)
-docker-compose up ## this might take some time
-```
-
-The default port is 3000  
+1. Start you docker via `Docker Quickstart Terminal`, you will see a machine IP (remember that).
+2. Use that machine IP and modify your local host file with new record `<machine IP> docker-hackmd`. ([Tutorial here](http://www.howtogeek.com/howto/27350/beginner-geek-how-to-edit-your-hosts-file/))
+3. Go back to your docker terminal, run `git clone https://github.com/hackmdio/docker-hackmd.git`.
+4. Run `docker-compose up` in your docker terminal.
+5. Wait until see th log `HTTP Server listening at port 3000`, it will take few minutes based on your internet.
+6. Open any browser and surf `docker-hackmd:3000`
 
 ## Update
 
