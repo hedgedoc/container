@@ -1,6 +1,5 @@
 {
     "production": {
-        "domain": "docker-hackmd",
         "urladdport": true,
         "db": {
             "username": "hackmd",
