@@ -23,7 +23,7 @@ Start your docker and enter the terminal, follow below commands:
 ```bash
 cd docker-hackmd ## enter the directory
 git pull ## pull new commits
-docker-compose build --no-cache ## rebuild container
+docker-compose pull ## pull new containers
 docker-compose up ## turn on
 ```
 
