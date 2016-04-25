@@ -5,7 +5,7 @@
             "username": "hackmd",
             "password": "hackmdpass",
             "database": "hackmd",
-            "host": "hackmd_db_postgres",
+            "host": "hackmdPostgres",
             "port": "5432",
             "dialect": "postgres"
         }
