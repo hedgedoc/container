@@ -44,4 +44,11 @@ CONTAINER ID        IMAGE                 COMMAND                  CREATED      
 ```
 - copy your backup out of container by `docker cp <container_id>:<backup_path> <host_path>`
 
+## Restore
+
+Like above steps, but the command is
+```bash
+➜  ~  cat postgresql_backup.sql | docker exec -i <container_id> psql -Upostgres
+```
+
 **Happy HackMD :smile:**
