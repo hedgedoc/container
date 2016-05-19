@@ -46,7 +46,7 @@ CONTAINER ID        IMAGE                 COMMAND                  CREATED      
 
 ## Restore
 
-Like above steps, but the command is
+Similar to backup steps, but last command is
 ```bash
 ➜  ~  cat postgresql_backup.sql | docker exec -i <container_id> psql -Upostgres
 ```
