@@ -1,4 +1,4 @@
-FROM node:5.10-wheezy
+FROM node:6.2.2-wheezy
 ENV DEBIAN_FRONTEND noninteractive
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ wheezy-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
 	wget -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add - && \
