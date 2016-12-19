@@ -14,9 +14,8 @@ RUN git clone https://github.com/hackmdio/hackmd.git /hackmd
 # npm, deps
 RUN npm install
 
-# bower
-RUN npm install -g bower
-RUN bower install --allow-root
+# build front-end bundle
+RUN npm run build:prod
 
 # add config
 ADD config.js /hackmd/public/js/config.js
