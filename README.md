@@ -7,6 +7,17 @@ docker-hackmd
 We don't use LZString to compress socket.io data and DB data after version 0.5.0.  
 Please run the migration tool if you're upgrading from the old version.
 
+1. Stop your hackmd containers
+2. Modify `docker-compose.yml`, add expose ports `5432` to `hackmdPostgres`
+3. `docker-compose up` to start your hackmd containers
+4. Backup DB (see below)
+5. Git clone above `migration-to-0.5.0` and `npm install` (see more on above link)
+6. Modify `config.json` in `migration-to-0.5.0`, change its `username`, `password` and `host` to your docker
+7. Run migration (see more on above link)
+8. Stop your hackmd containers
+9. Modify `docker-compose.yml`, remove expose ports `5432` in `hackmdPostgres`
+10. git pull in `docker-hackmd`, update to version 0.5.0 (see below)
+
 ## Prerequisite
 * git
 * docker (docker toolbox recommended)
