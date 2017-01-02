@@ -5,7 +5,7 @@ hackmdPostgres:
     - POSTGRES_PASSWORD=hackmdpass
     - POSTGRES_DB=hackmd
 hackmd:
-  image: hackmdio/hackmd:0.4.6
+  image: hackmdio/hackmd:0.5.0
   environment:
     - POSTGRES_USER=hackmd
     - POSTGRES_PASSWORD=hackmdpass
