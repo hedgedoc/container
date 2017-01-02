@@ -1,6 +1,12 @@
 docker-hackmd
 ===
 
+[migration-to-0.5.0](https://github.com/hackmdio/migration-to-0.5.0)
+---
+
+We don't use LZString to compress socket.io data and DB data after version 0.5.0.  
+Please run the migration tool if you're upgrading from the old version.
+
 ## Prerequisite
 * git
 * docker (docker toolbox recommended)
