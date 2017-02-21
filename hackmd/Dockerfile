@@ -20,7 +20,7 @@ ADD .sequelizerc /hackmd/.sequelizerc
 ADD docker-entrypoint.sh /hackmd/docker-entrypoint.sh
 
 # build front-end bundle
-RUN npm run build:prod
+RUN npm run build
 
 # remove dev dependencies
 RUN npm prune --production
