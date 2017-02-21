@@ -1,9 +1,13 @@
 FROM node:boron
 ENV DEBIAN_FRONTEND noninteractive
+ENV DOCKERIZE_VERSION v0.3.0
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ wheezy-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
 	wget -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add - && \
 	apt-get update && \
-	apt-get install -y git postgresql-client-9.6 build-essential
+	apt-get install -y git postgresql-client-9.6 build-essential && \
+	wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
+    tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
+    rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 # source
 RUN mkdir /hackmd
@@ -18,6 +22,7 @@ ADD config.js /hackmd/public/js/config.js
 ADD config.json /hackmd/config.json
 ADD .sequelizerc /hackmd/.sequelizerc
 ADD docker-entrypoint.sh /hackmd/docker-entrypoint.sh
+RUN chmod +x /hackmd/docker-entrypoint.sh
 
 # build front-end bundle
 RUN npm run build
@@ -31,4 +36,4 @@ RUN apt-get remove -y --auto-remove build-essential && \
 
 EXPOSE 3000
 
-CMD ["/bin/bash", "/hackmd/docker-entrypoint.sh"]
+CMD dockerize -wait tcp://hackmdPostgres:5432 -timeout 30s /hackmd/docker-entrypoint.sh
