@@ -6,8 +6,8 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ wheezy-pgdg main" > /etc/
 	apt-get update && \
 	apt-get install -y git postgresql-client-9.6 build-essential && \
 	wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
-    tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
-    rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+	tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
+	rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 # source
 RUN mkdir /hackmd
@@ -36,4 +36,4 @@ RUN apt-get remove -y --auto-remove build-essential && \
 
 EXPOSE 3000
 
-CMD dockerize -wait tcp://hackmdPostgres:5432 -timeout 30s /hackmd/docker-entrypoint.sh
+CMD ["/bin/bash", "-c", "dockerize -wait tcp://hackmdPostgres:5432 -timeout 30s /hackmd/docker-entrypoint.sh"] 

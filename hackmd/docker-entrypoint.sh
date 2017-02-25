@@ -1,4 +1,4 @@
-#!/bin/dash
+#!/bin/bash
 
 if [ -f .sequelizerc ];
 then
