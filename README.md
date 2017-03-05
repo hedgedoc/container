@@ -1,3 +1,7 @@
+[![](https://images.microbadger.com/badges/version/hackmdio/hackmd.svg)](https://microbadger.com/images/hackmdio/hackmd "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/hackmdio/hackmd.svg)](https://microbadger.com/images/hackmdio/hackmd "Get your own image badge on microbadger.com")
+
+[![](https://images.microbadger.com/badges/version/hackmdio/hackmd:lite.svg)](https://microbadger.com/images/hackmdio/hackmd:lite "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/hackmdio/hackmd:lite.svg)](https://microbadger.com/images/hackmdio/hackmd:lite "Get your own image badge on microbadger.com")
+
 docker-hackmd
 ===
 
