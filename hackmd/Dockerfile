@@ -18,7 +18,6 @@ RUN git clone https://github.com/hackmdio/hackmd.git /hackmd
 RUN npm install
 
 # add config
-ADD config.js /hackmd/public/js/config.js
 ADD config.json /hackmd/config.json
 ADD .sequelizerc /hackmd/.sequelizerc
 ADD docker-entrypoint.sh /hackmd/docker-entrypoint.sh
