@@ -1,0 +1,25 @@
+sudo: required
+language: bash
+services:
+  - docker
+
+env:
+  - BASE=debian
+  - BASE=alpine
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y parallel
+
+install:
+  # Build images
+  - docker build --build-arg ${TRAVIS_TAG:-master} -f $BASE/Dockerfile -t hackmd:testing .
+
+
+before_script:
+  # Run a database container with default settings
+  - docker run --name hackmd-database -e POSTGRES_USER=hackmd -e POSTGRES_PASSWORD=hackmdpass -e POSTGRES_DB=hackmd -d postgres:9.5
+
+script:
+  # Run all tests from test directory
+  - ls tests/*.sh | parallel
