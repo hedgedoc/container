@@ -4,8 +4,11 @@ services:
   - docker
 
 env:
-  - BASE=debian
-  - BASE=alpine
+  global:
+    - DOCKER_REPO=hackmdio/hackmd
+  matrix:
+    - BASE=debian
+    - BASE=alpine
 
 before_install:
   - sudo apt-get -qq update
@@ -13,7 +16,7 @@ before_install:
 
 install:
   # Build images
-  - docker build --build-arg ${TRAVIS_TAG:-master} -f $BASE/Dockerfile -t hackmd:testing .
+  - docker build --build-arg VERSION=${TRAVIS_TAG:-master} -f $BASE/Dockerfile -t hackmd:testing .
 
 
 before_script:
@@ -23,3 +26,7 @@ before_script:
 script:
   # Run all tests from test directory
   - ls tests/*.sh | parallel
+
+after_success:
+  - ./tools/tagging.sh "$DOCKER_REPO" "$TRAVIS_TAG" "$BASE"
+  - docker images
