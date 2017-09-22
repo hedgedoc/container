@@ -33,8 +33,7 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ wheezy-pgdg main" > /etc/
     rm -f /hackmd/.sequelizerc && ln -s /files/.sequelizerc /hackmd/.sequelizerc && \
 
     # Install NPM dependencies and build project
-    npm install && \
-    npm install --dev && \
+    yarn install --production=false && \
     npm install -g webpack && \
     npm run build && \
 
