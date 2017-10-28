@@ -39,6 +39,8 @@ RUN apk add --no-cache --virtual .dep build-base python git bash && \
     npm run build && \
     # Clean up this layer
     npm prune --production && \
+    yarn cache clean && \
+    npm cache clean && \
     apk del .dep && \
     adduser -u 10000 -h /hackmd/ -D -S hackmd && \
     chown -R hackmd /hackmd/

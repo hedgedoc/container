@@ -40,6 +40,8 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ wheezy-pgdg main" > /etc/
 
     # Clean up this layer
     npm prune --production && \
+    yarn cache clean && \
+    npm cache clean && \
     apt-get remove -y --auto-remove build-essential && \
     apt-get clean && apt-get purge && rm -r /var/lib/apt/lists/* && \
     # Create hackmd user
