@@ -3,7 +3,7 @@ docker-hackmd
 
 [![Build Status](https://travis-ci.org/hackmdio/docker-hackmd.svg?branch=master)](https://travis-ci.org/hackmdio/docker-hackmd)
 [![Gitter](https://badges.gitter.im/hackmdio/hackmd.svg)](https://gitter.im/hackmdio/hackmd?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
+[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://github.com/hackmdio/docker-hackmd/raw/master/docker-compose.yml&stack_name=hackmd)
 
 **Debian based version:**
 
