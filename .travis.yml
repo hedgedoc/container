@@ -21,7 +21,8 @@ install:
 
 before_script:
   # Run a database container with default settings
-  - docker run --name hackmd-database -e POSTGRES_USER=hackmd -e POSTGRES_PASSWORD=hackmdpass -e POSTGRES_DB=hackmd -d postgres:9.5
+  - docker network create postgres
+  - docker run --name hackmd-database --network postgres -e POSTGRES_USER=hackmd -e POSTGRES_PASSWORD=hackmdpass -e POSTGRES_DB=hackmd --net-alias hackmdpostgres --net-alias hackmdPostgres -d postgres:9.5
 
 script:
   # Run all tests from test directory
