@@ -1,7 +1,7 @@
 #!/bin/sh
 echo "
          ######################################
-         ###          Default test           ##
+         ###         New note test           ##
          ######################################
 "
 
@@ -24,7 +24,7 @@ sleep 40
 docker ps -f id=${DOCKERCONTAINER}
 
 
-wget -O- http://127.0.0.1:${PORT}/
+wget -O- http://127.0.0.1:${PORT}/new
 
 docker logs ${DOCKERCONTAINER}
 
