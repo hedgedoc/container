@@ -1,4 +1,4 @@
-FROM node:6.11.5
+FROM node:6.12.0
 
 # Build arguments to change source url, branch or tag
 ARG HACKMD_REPOSITORY=https://github.com/hackmdio/hackmd.git
