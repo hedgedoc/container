@@ -10,7 +10,7 @@ echo $HMD_DB_URL
 
 echo $DB_SOCKET
 
-if [ "DB_SOCKET" != "" ]; then
+if [ "$DB_SOCKET" != "" ]; then
     dockerize -wait tcp://${DB_SOCKET} -timeout 30s
 fi
 
