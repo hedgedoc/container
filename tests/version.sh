@@ -37,4 +37,4 @@ command_exits wget
 LATEST=$(docker_image_latest_tag `docker_base_name "$DOCKERFILE"`)
 CURRENT=$(docker_base_version "$DOCKERFILE")
 
-version_ge "$CURRENT" "$LATEST" && echo "$DOCKERFILE: Base image is up to date! Test successful." || { echo >&2 "$DOCKERFILE: A newer base image is available! Please updatei to version ${LATEST}."; exit 1; }
+version_ge "$CURRENT" "$LATEST" && echo "$DOCKERFILE: Base image is up to date! Test successful." || { echo >&2 "$DOCKERFILE: A newer base image is available! Please update to version ${LATEST}."; exit 1; }
