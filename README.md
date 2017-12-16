@@ -70,7 +70,7 @@ Please run the migration tool if you're upgrading from the old version.
 Start your docker and enter the terminal, follow below commands:
 
 ```bash
- docker-compose exec hackmdPostgres pg_dump hackmd -U hackmd  > backup.sql
+ docker-compose exec database pg_dump hackmd -U hackmd  > backup.sql
 ```
 
 
@@ -78,7 +78,7 @@ Start your docker and enter the terminal, follow below commands:
 
 Similar to backup steps, but last command is
 ```bash
-cat backup.sql | docker exec -i $(docker-compose ps -q hackmdPostgres) psql -U hackmd
+cat backup.sql | docker exec -i $(docker-compose ps -q database) psql -U hackmd
 ```
 
 
