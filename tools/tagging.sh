@@ -12,6 +12,7 @@ fi
 
 PREFIX=${1:-hackmd}
 VERSION=${2}
+SUFFIX=""
 [ "${3}" != "" ] && [ "${3}" != "debian" ] && SUFFIX="-${3}"
 
 
