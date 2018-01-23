@@ -16,10 +16,8 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 # Add configuraton files
 COPY config.json .sequelizerc /files/
 
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ wheezy-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
-    wget -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add - && \
-    apt-get update && \
-    apt-get install -y git postgresql-client-9.6 build-essential && \
+RUN apt-get update && \
+    apt-get install -y git build-essential && \
 
     # Clone the source
     git clone --depth 1 --branch $VERSION $HACKMD_REPOSITORY /hackmd && \
