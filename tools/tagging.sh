@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x
+
 if [ "$1" = "--help" ]; then
     echo "
     Usage of $0:
@@ -18,10 +20,10 @@ SUFFIX=""
 
 
 if [ "$VERSION" != "" ]; then
-    docker tag hackmd:testing $PREFIX:$(echo ${VERSION} | cut -d. -f1)${SUFFIX}
-    docker tag hackmd:testing $PREFIX:$(echo ${VERSION} | cut -d. -f1-2)${SUFFIX}
-    docker tag hackmd:testing $PREFIX:$(echo ${VERSION} | cut -d. -f1-3)${SUFFIX}
-    [ "$SUFFIX" = "" ] && docker tag hackmd:testing hackmd:latest
+    docker tag hackmd:testing "${PREFIX}:$(echo ${VERSION} | cut -d. -f1)${SUFFIX}"
+    docker tag hackmd:testing "${PREFIX}:$(echo ${VERSION} | cut -d. -f1-2)${SUFFIX}"
+    docker tag hackmd:testing "${PREFIX}:$(echo ${VERSION} | cut -d. -f1-3)${SUFFIX}"
+    [ "$SUFFIX" = "" ] && docker tag hackmd:testing "$PREFIX:latest"
 else
     echo "No version provided. Skipping tagging..."
 fi
