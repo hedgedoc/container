@@ -6,7 +6,7 @@ ARG VERSION=master
 
 # Set some default config variables
 ENV DEBIAN_FRONTEND noninteractive
-ENV DOCKERIZE_VERSION v0.3.0
+ENV DOCKERIZE_VERSION v0.6.1
 ENV NODE_ENV=production
 
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
