@@ -1,4 +1,4 @@
-FROM node:6.13.1-alpine
+FROM node:8.11.0-alpine
 
 # Build arguments to change source url, branch or tag
 ARG HACKMD_REPOSITORY=https://github.com/hackmdio/hackmd.git
@@ -38,9 +38,8 @@ RUN apk add --no-cache --virtual .dep build-base python git bash && \
     yarn global add webpack && \
     npm run build && \
     # Clean up this layer
-    npm prune --production && \
+    yarn install && \
     yarn cache clean && \
-    npm cache clean && \
     apk del .dep && \
     adduser -u 10000 -h /hackmd/ -D -S hackmd && \
     chown -R hackmd /hackmd/

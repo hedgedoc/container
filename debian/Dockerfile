@@ -1,4 +1,4 @@
-FROM node:6.13.1
+FROM node:8.11.0
 
 # Build arguments to change source url, branch or tag
 ARG HACKMD_REPOSITORY=https://github.com/hackmdio/hackmd.git
@@ -37,9 +37,8 @@ RUN apt-get update && \
     npm run build && \
 
     # Clean up this layer
-    npm prune --production && \
+    yarn install && \
     yarn cache clean && \
-    npm cache clean && \
     apt-get remove -y --auto-remove build-essential && \
     apt-get clean && apt-get purge && rm -r /var/lib/apt/lists/* && \
     # Create hackmd user
