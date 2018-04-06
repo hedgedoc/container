@@ -71,7 +71,6 @@ services:
 networks:
   # Internal network for communication with PostgreSQL/MySQL
   backend:
-    internal: true
 
 # Define named volumes so data stays in place
 volumes:
