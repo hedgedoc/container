@@ -5,7 +5,7 @@ ARG HACKMD_REPOSITORY=https://github.com/hackmdio/hackmd.git
 ARG VERSION=master
 
 # Set some default config variables
-ENV DOCKERIZE_VERSION=v0.3.0
+ENV DOCKERIZE_VERSION=v0.6.1
 ENV NODE_ENV=production
 
 # Disable PDF export on alpine

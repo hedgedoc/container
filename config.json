@@ -1,6 +1,6 @@
 {
     "production": {
-        "urladdport": true,
+        "urlAddPort": true,
         "email": true,
         "db": {
             "username": "hackmd",
