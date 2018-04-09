@@ -66,6 +66,8 @@ services:
     networks:
       backend:
     restart: always
+    depends_on:
+      - database
 
 # Define networks to allow best isolation
 networks:
