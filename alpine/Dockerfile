@@ -18,6 +18,31 @@ RUN apk add --no-cache --virtual .download wget  ca-certificates && \
     rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     apk del .download
 
+ENV GOSU_VERSION 1.10
+RUN set -ex; \
+    \
+    apk add --no-cache --virtual .gosu-deps \
+        dpkg \
+        gnupg \
+        openssl \
+    ; \
+    \
+    dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
+    wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
+    wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc"; \
+    \
+# verify the signature
+    export GNUPGHOME="$(mktemp -d)"; \
+    gpg --keyserver pgp.mit.edu --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
+    gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
+    rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc; \
+    \
+    chmod +x /usr/local/bin/gosu; \
+# verify that the binary works
+    gosu nobody true; \
+    \
+    apk del .gosu-deps
+
 # Add configuraton files
 COPY config.json .sequelizerc /files/
 
@@ -46,8 +71,9 @@ RUN apk add --no-cache --virtual .dep build-base python git bash && \
 
 WORKDIR /hackmd
 EXPOSE 3000
-USER hackmd
 
 # Add entrypoint and set command
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
+CMD ["node", "app.js"]
