@@ -10,7 +10,7 @@ if [ "$DB_SOCKET" != "" ]; then
     dockerize -wait tcp://${DB_SOCKET} -timeout 30s
 fi
 
-node_modules/.bin/sequelize db:migrate
+gosu hackmd node_modules/.bin/sequelize db:migrate
 
 # Print warning if local data storage is used but no volume is mounted
 [ "$HMD_IMAGE_UPLOAD_TYPE" = "filesystem" ] && { mountpoint -q ./public/uploads || {
@@ -30,9 +30,14 @@ node_modules/.bin/sequelize db:migrate
     ";
 } ; }
 
+# Change owner and permission if filesystem backend is used
+if [ "$HMD_IMAGE_UPLOAD_TYPE" = "filesystem" ]; then
+    chown -R hackmd ./public/uploads
+    chmod 700 ./public/uploads
+fi
+
 # Sleep to make sure everything is fine...
 sleep 3
 
 # run
-node app.js
-
+exec gosu hackmd "$@"
