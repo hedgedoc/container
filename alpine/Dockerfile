@@ -19,6 +19,7 @@ RUN apk add --no-cache --virtual .download wget  ca-certificates && \
     apk del .download
 
 ENV GOSU_VERSION 1.10
+COPY gosu-gpg.key /tmp/gosu.key
 RUN set -ex; \
     \
     apk add --no-cache --virtual .gosu-deps \
@@ -33,7 +34,7 @@ RUN set -ex; \
     \
 # verify the signature
     export GNUPGHOME="$(mktemp -d)"; \
-    gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
+    gpg --import /tmp/gosu.key; \
     gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
     rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc; \
     \
