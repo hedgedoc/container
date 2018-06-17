@@ -81,6 +81,11 @@ Similar to backup steps, but last command is
 cat backup.sql | docker exec -i $(docker-compose ps -q database) psql -U hackmd
 ```
 
+# Kubernetes
+
+To install use `helm install stable/hackmd`.
+
+For all further details, please check out the offical HackMD  [K8s helm chart](https://github.com/kubernetes/charts/tree/master/stable/hackmd).
 
 # Custom build
 
