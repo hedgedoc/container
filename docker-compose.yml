@@ -47,7 +47,7 @@ services:
     #  args:
     #    - "VERSION=master"
     #    - "HACKMD_REPOSITORY=https://github.com/hackmdio/hackmd.git"
-    image: hackmdio/hackmd:1.1.0-ce
+    image: hackmdio/hackmd:1.1.1-ce
     environment:
       # DB_URL is formatted like: <databasetype>://<username>:<password>@<hostname>/<database>
       # Other examples are:
