@@ -4,6 +4,8 @@ if [ "$HMD_DB_URL" = "" ]; then
     HMD_DB_URL="postgres://hackmd:hackmdpass@hackmdPostgres:5432/hackmd"
 fi
 
+export HMD_DB_URL
+
 DB_SOCKET=$(echo ${HMD_DB_URL} | sed -e 's/.*:\/\//\/\//' -e 's/.*\/\/[^@]*@//' -e 's/\/.*$//')
 
 if [ "$DB_SOCKET" != "" ]; then
