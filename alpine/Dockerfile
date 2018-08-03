@@ -23,6 +23,8 @@ COPY gosu-gpg.key /tmp/gosu.key
 RUN set -ex; \
     \
     apk add --no-cache --virtual .gosu-deps \
+        wget \
+        ca-certificates \
         dpkg \
         gnupg \
         openssl \
