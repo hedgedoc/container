@@ -7,8 +7,8 @@ services:
     # Don't upgrade PostgreSQL by simply changing the version number
     # You need to migrate the Database to the new PostgreSQL version
     image: postgres:9.6-alpine
-    mem_limit: 256mb
-    memswap_limit: 512mb
+    #mem_limit: 256mb         # version 2 only
+    #memswap_limit: 512mb     # version 2 only
     read_only: true
     tmpfs:
       - /run/postgresql:size=512K
@@ -53,8 +53,8 @@ services:
     #    - "VERSION=master"
     #    - "HACKMD_REPOSITORY=https://github.com/hackmdio/hackmd.git"
     image: hackmdio/hackmd:1.2.0
-    mem_limit: 256mb
-    memswap_limit: 512mb
+    #mem_limit: 256mb         # version 2 only
+    #memswap_limit: 512mb     # version 2 only
     read_only: true
     tmpfs:
       - /tmp:size=512K
