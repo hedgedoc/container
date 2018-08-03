@@ -19,7 +19,7 @@ RUN apk add --no-cache --virtual .download wget  ca-certificates && \
     apk del .download
 
 ENV GOSU_VERSION 1.10
-COPY gosu-gpg.key /tmp/gosu.key
+COPY resources/gosu-gpg.key /tmp/gosu.key
 RUN set -ex; \
     \
     apk add --no-cache --virtual .gosu-deps \
@@ -47,7 +47,7 @@ RUN set -ex; \
     apk del .gosu-deps
 
 # Add configuraton files
-COPY config.json .sequelizerc /files/
+COPY resources/config.json resources/.sequelizerc /files/
 
 # Install all dependencies and build project
 RUN apk add --no-cache --virtual .dep build-base python git bash && \
@@ -76,7 +76,7 @@ WORKDIR /hackmd
 EXPOSE 3000
 
 # Add entrypoint and set command
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY resources/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 CMD ["node", "app.js"]

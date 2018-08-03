@@ -14,7 +14,7 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 ENV GOSU_VERSION 1.10
-COPY gosu-gpg.key /tmp/gosu.key
+COPY resources/gosu-gpg.key /tmp/gosu.key
 RUN set -ex; \
     dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
     wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
@@ -31,7 +31,7 @@ RUN set -ex; \
     gosu nobody true
 
 # Add configuraton files
-COPY config.json .sequelizerc /files/
+COPY resources/config.json resources/.sequelizerc /files/
 
 RUN apt-get update && \
     apt-get install -y git build-essential && \
@@ -65,7 +65,7 @@ RUN apt-get update && \
 WORKDIR /hackmd
 EXPOSE 3000
 
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY resources/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
