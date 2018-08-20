@@ -9,9 +9,10 @@ services:
     image: postgres:9.6-alpine
     #mem_limit: 256mb         # version 2 only
     #memswap_limit: 512mb     # version 2 only
-    read_only: true
-    tmpfs:
-      - /run/postgresql:size=512K
+    #read_only: true          # not supported in swarm mode please enable along with tmpfs
+    #tmpfs:
+    #  - /run/postgresql:size=512K
+    #  - /tmp:size=256K
     environment:
       - POSTGRES_USER=hackmd
       - POSTGRES_PASSWORD=hackmdpass
@@ -55,10 +56,10 @@ services:
     image: hackmdio/hackmd:1.2.0
     #mem_limit: 256mb         # version 2 only
     #memswap_limit: 512mb     # version 2 only
-    read_only: true
-    tmpfs:
-      - /tmp:size=512K
-      - /hackmd/tmp:size=1M
+    #read_only: true          # not supported in swarm mode, enable along with tmpfs
+    #tmpfs:
+    #  - /tmp:size=512K
+    #  - /hackmd/tmp:size=1M
       # Make sure you remove this when you use filesystem as upload type
       - /hackmd/public/uploads:size=10M
     environment:
