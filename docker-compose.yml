@@ -53,7 +53,7 @@ services:
     #  args:
     #    - "VERSION=master"
     #    - "HACKMD_REPOSITORY=https://github.com/hackmdio/hackmd.git"
-    image: hackmdio/hackmd:1.2.0
+    image: hackmdio/hackmd:1.2.1
     #mem_limit: 256mb         # version 2 only
     #memswap_limit: 512mb     # version 2 only
     #read_only: true          # not supported in swarm mode, enable along with tmpfs

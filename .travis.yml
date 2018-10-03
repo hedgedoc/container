@@ -6,7 +6,7 @@ services:
 env:
   global:
     - DOCKER_REPO=hackmdio/hackmd
-    - HMD_VERSION=1.2.0
+    - HMD_VERSION=1.2.1
   matrix:
     - BASE=debian
     - BASE=alpine
