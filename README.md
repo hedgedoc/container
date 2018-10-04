@@ -104,9 +104,9 @@ For all further details, please check out the offical HackMD  [K8s helm chart](h
 # Custom build
 
 The default setting would use pre-build docker image, if you want to build your own containers
-uncomment the `build` section in the [`docker-compose.yml`](https://github.com/hackmdio/codimd-container/blob/master/docker-compose.yml) and edit the [`config.json`](https://github.com/hackmdio/codimd-container/blob/master/config.json).
+uncomment the `build` section in the [`docker-compose.yml`](https://github.com/hackmdio/codimd-container/blob/master/docker-compose.yml) and edit the [`config.json`](https://github.com/hackmdio/codimd-container/blob/master/resources/config.json).
 
-If you change the database settings and don't use the `HMD_DB_URL` make sure you edit the [`.sequelizerc`](https://github.com/hackmdio/codimd-container/blob/master/.sequelizerc).
+If you change the database settings and don't use the `HMD_DB_URL` make sure you edit the [`.sequelizerc`](https://github.com/hackmdio/codimd-container/blob/master/resources/.sequelizerc).
 
 
 # License
