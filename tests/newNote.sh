@@ -17,7 +17,7 @@ PORT=$(cat /dev/urandom|od -N2 -An -i|awk -v f=10000 -v r=19999 '{printf "%i\n",
 [ $(netstat -an | grep LISTEN | grep :$PORT | wc -l) -eq 0 ] || { ./$0 && exit 0 || exit 1; }
 
 # Run container in a simple way
-DOCKERCONTAINER=$(docker run -d --network postgres -p 127.0.0.1:${PORT}:3000 -e "HMD_DB_URL=postgres://hackmd:hackmdpass@hackmdPostgres:5432/hackmd" hackmd:testing)
+DOCKERCONTAINER=$(docker run -d --network postgres -p 127.0.0.1:${PORT}:3000 -e "HMD_DB_URL=postgres://hackmd:hackmdpass@hackmdPostgres:5432/hackmd" codimd:testing)
 
 # Make sure the container is not restarting
 sleep 40

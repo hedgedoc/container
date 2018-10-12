@@ -52,8 +52,8 @@ services:
     #  dockerfile: debian/Dockerfile
     #  args:
     #    - "VERSION=master"
-    #    - "HACKMD_REPOSITORY=https://github.com/hackmdio/hackmd.git"
     image: hackmdio/hackmd:1.2.1
+        - "CODIMD_REPOSITORY=https://github.com/hackmdio/codimd.git"
     #mem_limit: 256mb         # version 2 only
     #memswap_limit: 512mb     # version 2 only
     #read_only: true          # not supported in swarm mode, enable along with tmpfs
@@ -68,7 +68,7 @@ services:
       # - mysql://hackmd:hackmdpass@database:3306/hackmd
       # - sqlite:///data/sqlite.db (NOT RECOMMENDED)
       # - For details see the official sequelize docs: http://docs.sequelizejs.com/en/v3/
-      - HMD_DB_URL=postgres://hackmd:hackmdpass@database:5432/hackmd
+      - CMD_DB_URL=postgres://hackmd:hackmdpass@database:5432/hackmd
     ports:
       # Ports that are published to the outside.
       # The latter port is the port inside the container. It should always stay on 3000

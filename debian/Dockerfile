@@ -1,7 +1,7 @@
 FROM node:8.12.0
 
 # Build arguments to change source url, branch or tag
-ARG HACKMD_REPOSITORY=https://github.com/hackmdio/hackmd.git
+ARG CODIMD_REPOSITORY=https://github.com/hackmdio/codimd.git
 ARG VERSION=master
 
 # Set some default config variables
@@ -37,20 +37,19 @@ RUN apt-get update && \
     apt-get install -y git build-essential && \
 
     # Clone the source
-    git clone --depth 1 --branch $VERSION $HACKMD_REPOSITORY /hackmd && \
+    git clone --depth 1 --branch $VERSION $CODIMD_REPOSITORY /codimd && \
     # Print the cloned version and clean up git files
-    cd /hackmd && \
+    cd /codimd && \
     git log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1 && echo && \
-    rm -rf /hackmd/.git && \
+    rm -rf /codimd/.git && \
 
     # Symlink configuration files
-    rm -f /hackmd/config.json && ln -s /files/config.json /hackmd/config.json && \
-    rm -f /hackmd/.sequelizerc && ln -s /files/.sequelizerc /hackmd/.sequelizerc && \
+    rm -f /codimd/config.json && ln -s /files/config.json /codimd/config.json && \
+    rm -f /codimd/.sequelizerc && ln -s /files/.sequelizerc /codimd/.sequelizerc && \
 
     # Install NPM dependencies and build project
     yarn install --pure-lockfile && \
     yarn install --production=false --pure-lockfile && \
-    yarn global add webpack && \
     npm run build && \
 
     # Clean up this layer
@@ -58,11 +57,11 @@ RUN apt-get update && \
     yarn cache clean && \
     apt-get remove -y --auto-remove build-essential && \
     apt-get clean && apt-get purge && rm -r /var/lib/apt/lists/* && \
-    # Create hackmd user
-    adduser --uid 10000 --home /hackmd/ --disabled-password --system hackmd && \
-    chown -R hackmd /hackmd/
+    # Create codimd user
+    adduser --uid 10000 --home /codimd/ --disabled-password --system codimd && \
+    chown -R codimd /codimd/
 
-WORKDIR /hackmd
+WORKDIR /codimd
 EXPOSE 3000
 
 COPY resources/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
