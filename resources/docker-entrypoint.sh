@@ -1,21 +1,29 @@
 #!/bin/sh
 
-if [ "$HMD_DB_URL" = "" ]; then
-    HMD_DB_URL="postgres://hackmd:hackmdpass@hackmdPostgres:5432/hackmd"
+if [ "$HMD_DB_URL" != "" ] && [ "$CMD_DB_URL" = "" ]; then
+    CMD_DB_URL="$HMD_DB_URL"
 fi
 
-export HMD_DB_URL
+if [ "$HMD_IMAGE_UPLOAD_TYPE" != "" ] && [ "$CMD_IMAGE_UPLOAD_TYPE" = "" ]; then
+    CMD_IMAGE_UPLOAD_TYPE="$HMD_IMAGE_UPLOAD_TYPE"
+fi
 
-DB_SOCKET=$(echo ${HMD_DB_URL} | sed -e 's/.*:\/\//\/\//' -e 's/.*\/\/[^@]*@//' -e 's/\/.*$//')
+if [ "$CMD_DB_URL" = "" ]; then
+    CMD_DB_URL="postgres://hackmd:hackmdpass@hackmdPostgres:5432/hackmd"
+fi
+
+export CMD_DB_URL
+
+DB_SOCKET=$(echo ${CMD_DB_URL} | sed -e 's/.*:\/\//\/\//' -e 's/.*\/\/[^@]*@//' -e 's/\/.*$//')
 
 if [ "$DB_SOCKET" != "" ]; then
     dockerize -wait tcp://${DB_SOCKET} -timeout 30s
 fi
 
-gosu hackmd node_modules/.bin/sequelize db:migrate
+gosu codimd node_modules/.bin/sequelize db:migrate
 
 # Print warning if local data storage is used but no volume is mounted
-[ "$HMD_IMAGE_UPLOAD_TYPE" = "filesystem" ] && { mountpoint -q ./public/uploads || {
+[ "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ] && { mountpoint -q ./public/uploads || {
     echo "
         #################################################################
         ###                                                           ###
@@ -33,8 +41,8 @@ gosu hackmd node_modules/.bin/sequelize db:migrate
 } ; }
 
 # Change owner and permission if filesystem backend is used
-if [ "$HMD_IMAGE_UPLOAD_TYPE" = "filesystem" ]; then
-    chown -R hackmd ./public/uploads
+if [ "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ]; then
+    chown -R codimd ./public/uploads
     chmod 700 ./public/uploads
 fi
 
@@ -42,4 +50,4 @@ fi
 sleep 3
 
 # run
-exec gosu hackmd "$@"
+exec gosu codimd "$@"

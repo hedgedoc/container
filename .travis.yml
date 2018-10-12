@@ -6,7 +6,7 @@ services:
 env:
   global:
     - DOCKER_REPO=hackmdio/hackmd
-    - HMD_VERSION=1.2.1
+    - CMD_VERSION=1.2.1
   matrix:
     - BASE=debian
     - BASE=alpine
@@ -17,7 +17,7 @@ before_install:
 
 install:
   # Build images
-  - docker build --build-arg VERSION=${HMD_VERSION:-master} -f $BASE/Dockerfile -t hackmd:testing .
+  - docker build --build-arg VERSION=${CMD_VERSION:-master} -f $BASE/Dockerfile -t codimd:testing .
 
 
 before_script:

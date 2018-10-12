@@ -4,5 +4,5 @@ module.exports = {
     'config':          path.resolve('config.json'),
     'migrations-path': path.resolve('lib', 'migrations'),
     'models-path':     path.resolve('lib', 'models'),
-    'url':             process.env.HMD_DB_URL
+    'url':             process.env.CMD_DB_URL
 }
