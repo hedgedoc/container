@@ -52,8 +52,8 @@ services:
     #  dockerfile: debian/Dockerfile
     #  args:
     #    - "VERSION=master"
+    #    - "CODIMD_REPOSITORY=https://github.com/hackmdio/codimd.git"
     image: hackmdio/hackmd:1.2.1
-        - "CODIMD_REPOSITORY=https://github.com/hackmdio/codimd.git"
     #mem_limit: 256mb         # version 2 only
     #memswap_limit: 512mb     # version 2 only
     #read_only: true          # not supported in swarm mode, enable along with tmpfs
