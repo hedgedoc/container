@@ -41,7 +41,7 @@ See more here: https://docs.docker.com/
 Start your docker and enter the terminal, follow below commands:
 
 ```bash
-cd codimd-contianer ## enter the directory
+cd codimd-container ## enter the directory
 git pull ## pull new commits
 docker-compose pull ## pull new containers
 docker-compose up ## turn on
