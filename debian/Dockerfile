@@ -34,14 +34,21 @@ RUN set -ex; \
 COPY resources/config.json resources/.sequelizerc /files/
 
 RUN apt-get update && \
-    apt-get install -y git build-essential && \
+    apt-get install -y git build-essential jq && \
 
     # Clone the source
-    git clone --depth 1 --branch $VERSION $CODIMD_REPOSITORY /codimd && \
+    git clone --depth 1 --branch "$VERSION" "$CODIMD_REPOSITORY" /codimd && \
     # Print the cloned version and clean up git files
     cd /codimd && \
     git log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1 && echo && \
+    git rev-parse HEAD > /tmp/gitref && \
     rm -rf /codimd/.git && \
+
+    # Mime the git repository for fullversion
+    mkdir /codimd/.git && \
+    mv /tmp/gitref /codimd/.git/HEAD && \
+    jq ".repository.url = \"${CODIMD_REPOSITORY}\"" /codimd/package.json > /codimd/package.new.json && \
+    mv /codimd/package.new.json /codimd/package.json && \
 
     # Symlink configuration files
     rm -f /codimd/config.json && ln -s /files/config.json /codimd/config.json && \
@@ -55,7 +62,7 @@ RUN apt-get update && \
     # Clean up this layer
     yarn install && \
     yarn cache clean && \
-    apt-get remove -y --auto-remove build-essential && \
+    apt-get remove -y --auto-remove build-essential git jq && \
     apt-get clean && apt-get purge && rm -r /var/lib/apt/lists/* && \
     # Create codimd user
     adduser --uid 10000 --home /codimd/ --disabled-password --system codimd && \
