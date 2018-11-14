@@ -13,7 +13,7 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-ENV GOSU_VERSION 1.10
+ENV GOSU_VERSION 1.11
 COPY resources/gosu-gpg.key /tmp/gosu.key
 RUN set -ex; \
     dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
