@@ -64,7 +64,7 @@ RUN apk add --no-cache --virtual .dep build-base openssl-dev python git jq bash 
     mv /tmp/gitref /codimd/.git/HEAD && \
     jq ".repository.url = \"${CODIMD_REPOSITORY}\"" /codimd/package.json > /codimd/package.new.json && \
     mv /codimd/package.new.json /codimd/package.json && \
-
+    \
     # Symlink configuration files
     rm -f /codimd/config.json && ln -s /files/config.json /codimd/config.json && \
     rm -f /codimd/.sequelizerc && ln -s /files/.sequelizerc /codimd/.sequelizerc && \

@@ -38,7 +38,7 @@ RUN apt-get update && \
     apt-get install -y git build-essential jq && \
     # Add fonts for PDF export
     apt-get install -y fonts-noto && \
-
+    \
     # Clone the source
     git clone --depth 1 --branch "$VERSION" "$CODIMD_REPOSITORY" /codimd && \
     # Print the cloned version and clean up git files
@@ -46,22 +46,22 @@ RUN apt-get update && \
     git log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1 && echo && \
     git rev-parse HEAD > /tmp/gitref && \
     rm -rf /codimd/.git && \
-
+    \
     # Mime the git repository for fullversion
     mkdir /codimd/.git && \
     mv /tmp/gitref /codimd/.git/HEAD && \
     jq ".repository.url = \"${CODIMD_REPOSITORY}\"" /codimd/package.json > /codimd/package.new.json && \
     mv /codimd/package.new.json /codimd/package.json && \
-
+    \
     # Symlink configuration files
     rm -f /codimd/config.json && ln -s /files/config.json /codimd/config.json && \
     rm -f /codimd/.sequelizerc && ln -s /files/.sequelizerc /codimd/.sequelizerc && \
-
+    \
     # Install NPM dependencies and build project
     yarn install --pure-lockfile && \
     yarn install --production=false --pure-lockfile && \
     npm run build && \
-
+    \
     # Clean up this layer
     yarn install && \
     yarn cache clean && \
