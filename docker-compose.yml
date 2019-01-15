@@ -59,9 +59,9 @@ services:
     #read_only: true          # not supported in swarm mode, enable along with tmpfs
     #tmpfs:
     #  - /tmp:size=512K
-    #  - /hackmd/tmp:size=1M
+    #  - /codimd/tmp:size=1M
     #  # Make sure you remove this when you use filesystem as upload type
-    #  - /hackmd/public/uploads:size=10M
+    #  - /codimd/public/uploads:size=10M
     environment:
       # DB_URL is formatted like: <databasetype>://<username>:<password>@<hostname>/<database>
       # Other examples are:
