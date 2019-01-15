@@ -1,4 +1,4 @@
-FROM node:8.12.0-alpine
+FROM node:8.15.0-alpine
 
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY=https://github.com/hackmdio/codimd.git
