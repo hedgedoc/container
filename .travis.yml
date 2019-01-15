@@ -14,6 +14,14 @@ env:
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y parallel
+  # Test changed when they are merged into master branch.
+  - set -e;
+    if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ "$TRAVIS_BRANCH" != "master" ]; then
+    export GIT_COMMITTER_EMAIL=no-reply+travis@codimd.org;
+    export GIT_COMMITTER_NAME='Travis CI';
+    git checkout master;
+    git merge "$TRAVIS_COMMIT";
+    fi
 
 install:
   # Build images
