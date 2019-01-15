@@ -22,7 +22,7 @@ RUN set -ex; \
     \
 # verify the signature
     export GNUPGHOME="$(mktemp -d)"; \
-    gpg --import /tmp/gosu.key; \
+    gpg --no-tty --import /tmp/gosu.key; \
     gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
     rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc; \
     \
