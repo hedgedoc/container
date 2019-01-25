@@ -35,6 +35,8 @@ COPY resources/config.json resources/.sequelizerc /files/
 
 RUN apt-get update && \
     apt-get install -y git build-essential jq && \
+    # Add fonts for PDF export
+    apt-get install -y fonts-noto && \
 
     # Clone the source
     git clone --depth 1 --branch "$VERSION" "$CODIMD_REPOSITORY" /codimd && \
