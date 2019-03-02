@@ -12,11 +12,15 @@ ENV NODE_ENV=production
 # PhantomJS is broken on alpine and crashes CodiMD
 ENV CMD_ALLOW_PDF_EXPORT=false
 
-RUN apk add --no-cache --virtual .download wget  ca-certificates && \
-    wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
-    tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
-    rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
-    apk del .download
+RUN true \
+    && apk add --no-cache --virtual .download wget ca-certificates \
+    && echo "dddbf178ecfd55fa6670b01ac08fef63ef9490212426b9fab8a602345409da8f dockerize-alpine-linux-amd64-${DOCKERIZE_VERSION}.tar.gz" > dockerize_checksum \
+    && wget https://github.com/jwilder/dockerize/releases/download/${DOCKERIZE_VERSION}/dockerize-alpine-linux-amd64-${DOCKERIZE_VERSION}.tar.gz \
+    && sha256sum -c dockerize_checksum \
+    && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-${DOCKERIZE_VERSION}.tar.gz \
+    && rm dockerize-linux-amd64-${DOCKERIZE_VERSION}.tar.gz dockerize_checksum \
+    && apk del .download \
+    && true
 
 ENV GOSU_VERSION 1.11
 COPY resources/gosu-gpg.key /tmp/gosu.key

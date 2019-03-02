@@ -9,9 +9,14 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV DOCKERIZE_VERSION v0.6.1
 ENV NODE_ENV=production
 
-RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
-    tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
-    rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
+RUN true \
+    && echo "1fa29cd41a5854fd5423e242f3ea9737a50a8c3bcf852c9e62b9eb02c6ccd370 dockerize-linux-amd64-${DOCKERIZE_VERSION}.tar.gz" > dockerize_checksum \
+    && wget https://github.com/jwilder/dockerize/releases/download/${DOCKERIZE_VERSION}/dockerize-linux-amd64-${DOCKERIZE_VERSION}.tar.gz \
+    && sha256sum -c dockerize_checksum \
+    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-${DOCKERIZE_VERSION}.tar.gz \
+    && rm dockerize-linux-amd64-${DOCKERIZE_VERSION}.tar.gz dockerize_checksum \
+    && true
 
 ENV GOSU_VERSION 1.11
 COPY resources/gosu-gpg.key /tmp/gosu.key
