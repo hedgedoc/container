@@ -50,7 +50,7 @@ RUN set -ex; \
 COPY resources/config.json resources/.sequelizerc /files/
 
 # Install all dependencies and build project
-RUN apk add --no-cache --virtual .dep build-base python git jq bash && \
+RUN apk add --no-cache --virtual .dep build-base openssl-dev python git jq bash && \
     # Clone the source
     git clone --depth 1 --branch "$VERSION" "$CODIMD_REPOSITORY" /codimd && \
     # Print the cloned version and clean up git files
