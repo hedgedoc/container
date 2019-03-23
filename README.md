@@ -128,7 +128,7 @@ Please see [the Docker installation documentation](https://docs.docker.com/insta
 
 If you have any problems with or questions about this image, please contact us through a [GitHub issue](https://github.com/hackmdio/codimd-container/issues).
 
-You can also reach many of the project maintainers via our [`#codimd:matrix.org`](https://matrix.to/#/#codimd:matrix.org) or the `hackmd` channel on [Gitter](https://gitter.im/hackmdio/hackmd).
+You can also reach many of the project maintainers via our [`#codimd:matrix.org`](https://matrix.to/#/#codimd:matrix.org).
 
 
 ## Contributing
