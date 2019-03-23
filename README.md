@@ -3,7 +3,6 @@ CodiMD container
 
 [![Build Status](https://travis-ci.org/hackmdio/codimd-container.svg?branch=master)](https://travis-ci.org/hackmdio/codimd-container)
 [![#CodiMD on matrix.org](https://img.shields.io/badge/Matrix.org-%23CodiMD@matrix.org-green.svg)](https://riot.im/app/#/room/#codimd:matrix.org)
-[![Gitter](https://badges.gitter.im/hackmdio/hackmd.svg)](https://gitter.im/hackmdio/hackmd?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://github.com/hackmdio/codimd-container/raw/master/docker-compose.yml&stack_name=hackmd)
 
 **Debian based version:**
