@@ -9,11 +9,13 @@ CodiMD container
 
 [![](https://images.microbadger.com/badges/version/hackmdio/hackmd:latest.svg)](https://microbadger.com/images/hackmdio/hackmd "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/hackmdio/hackmd:latest.svg)](https://microbadger.com/images/hackmdio/hackmd "Get your own image badge on microbadger.com")
 
+Main docker image based on Debian and used by default in the `docker-compose.yml`. Recommended for test and production deployments.
 
 **Alpine based version:**
 
 [![](https://images.microbadger.com/badges/version/hackmdio/hackmd:alpine.svg)](https://microbadger.com/images/hackmdio/hackmd:alpine "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/hackmdio/hackmd:alpine.svg)](https://microbadger.com/images/hackmdio/hackmd:alpine "Get your own image badge on microbadger.com")
 
+Minimal docker image based on Alpine can be used for expert setups. In order to prevent crashes due to dependency problems, this version comes without PDF export.
 
 # Prerequisite
 * git (https://git-scm.com/)
