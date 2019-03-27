@@ -9,6 +9,12 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV DOCKERIZE_VERSION v0.6.1
 ENV NODE_ENV=production
 
+RUN true \
+    && apt-get update \
+    && apt-get upgrade -y \
+    && apt-get clean && apt-get purge && rm -r /var/lib/apt/lists/* \
+    && true
+
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz

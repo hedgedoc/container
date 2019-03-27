@@ -12,6 +12,8 @@ ENV NODE_ENV=production
 # PhantomJS is broken on alpine and crashes CodiMD
 ENV CMD_ALLOW_PDF_EXPORT=false
 
+RUN apk upgrade --no-cache
+
 RUN apk add --no-cache --virtual .download wget  ca-certificates && \
     wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
