@@ -1,19 +1,19 @@
 CodiMD container
 ===
 
-[![Build Status](https://travis-ci.org/hackmdio/codimd-container.svg?branch=master)](https://travis-ci.org/hackmdio/codimd-container)
+[![Build Status](https://travis-ci.org/codimd/container.svg?branch=master)](https://travis-ci.org/codimd/container)
 [![#CodiMD on matrix.org](https://img.shields.io/badge/Matrix.org-%23CodiMD@matrix.org-green.svg)](https://riot.im/app/#/room/#codimd:matrix.org)
-[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://github.com/hackmdio/codimd-container/raw/master/docker-compose.yml&stack_name=hackmd)
+[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://github.com/codimd/container/raw/master/docker-compose.yml&stack_name=codimd)
 
 **Debian based version:**
 
-[![](https://images.microbadger.com/badges/version/hackmdio/hackmd:latest.svg)](https://microbadger.com/images/hackmdio/hackmd "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/hackmdio/hackmd:latest.svg)](https://microbadger.com/images/hackmdio/hackmd "Get your own image badge on microbadger.com")
+[![Docker Repository on Quay](https://quay.io/repository/codimd/server/status "Docker Repository on Quay")](https://quay.io/repository/codimd/server)
 
 Main docker image based on Debian and used by default in the `docker-compose.yml`. Recommended for test and production deployments.
 
 **Alpine based version:**
 
-[![](https://images.microbadger.com/badges/version/hackmdio/hackmd:alpine.svg)](https://microbadger.com/images/hackmdio/hackmd:alpine "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/hackmdio/hackmd:alpine.svg)](https://microbadger.com/images/hackmdio/hackmd:alpine "Get your own image badge on microbadger.com")
+[![Docker Repository on Quay](https://quay.io/repository/codimd/server/status "Docker Repository on Quay")](https://quay.io/repository/codimd/server)
 
 Minimal docker image based on Alpine can be used for expert setups. In order to prevent crashes due to dependency problems, this version comes without PDF export.
 
@@ -30,7 +30,7 @@ See more here: https://docs.docker.com/
 ## Get started
 
 1. Install docker and docker-compose, "Docker for Windows" or "Docker for Mac"
-2. Run `git clone https://github.com/hackmdio/codimd-container.git`
+2. Run `git clone https://github.com/codimd/container.git codimd-container`
 3. Change to the directory `codimd-container` directory
 4. Run `docker-compose up` in your terminal
 5. Wait until see the log `HTTP Server listening at port 3000`, it will take few minutes based on your internet connection.
@@ -50,12 +50,12 @@ docker-compose up ## turn on
 
 ### Migrate from docker-hackmd
 
-If you used the [`docker-hackmd`](https://github.com/hackmdio/docker-hackmd) repository before, migrating to [`codimd-container`](https://github.com/hackmdio/codimd-container) is easy.
+If you used the [`docker-hackmd`](https://github.com/hackmdio/docker-hackmd) repository before, migrating to [`codimd-container`](https://github.com/codimd/container) is easy.
 
 Since codimd-container is basically a fork of `docker-hackmd`, all you need to do is replacing the upstream URL.
 
 ```bash
-git remote set-url origin https://github.com/hackmdio/codimd-container.git
+git remote set-url origin https://github.com/codimd/container.git
 git pull
 ```
 
@@ -105,14 +105,14 @@ For all further details, please check out the offical HackMD  [K8s helm chart](h
 # Custom build
 
 The default setting would use pre-build docker image, if you want to build your own containers
-uncomment the `build` section in the [`docker-compose.yml`](https://github.com/hackmdio/codimd-container/blob/master/docker-compose.yml) and edit the [`config.json`](https://github.com/hackmdio/codimd-container/blob/master/resources/config.json).
+uncomment the `build` section in the [`docker-compose.yml`](https://github.com/codimd/container/blob/master/docker-compose.yml) and edit the [`config.json`](https://github.com/codimd/container/blob/master/resources/config.json).
 
-If you change the database settings and don't use the `HMD_DB_URL` make sure you edit the [`.sequelizerc`](https://github.com/hackmdio/codimd-container/blob/master/resources/.sequelizerc).
+If you change the database settings and don't use the `HMD_DB_URL` make sure you edit the [`.sequelizerc`](https://github.com/codimd/container/blob/master/resources/.sequelizerc).
 
 
 # License
 
-View [license information](https://github.com/hackmdio/codimd) for the software contained in this image.
+View [license information](https://github.com/codimd/server) for the software contained in this image.
 
 
 # Supported Docker versions
@@ -128,7 +128,7 @@ Please see [the Docker installation documentation](https://docs.docker.com/insta
 
 ## Issues
 
-If you have any problems with or questions about this image, please contact us through a [GitHub issue](https://github.com/hackmdio/codimd-container/issues).
+If you have any problems with or questions about this image, please contact us through a [GitHub issue](https://github.com/codimd/container/issues).
 
 You can also reach many of the project maintainers via our [`#codimd:matrix.org`](https://matrix.to/#/#codimd:matrix.org).
 

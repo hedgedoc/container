@@ -1,7 +1,7 @@
 FROM node:8.15.1
 
 # Build arguments to change source url, branch or tag
-ARG CODIMD_REPOSITORY=https://github.com/hackmdio/codimd.git
+ARG CODIMD_REPOSITORY=https://github.com/codimd/server.git
 ARG VERSION=master
 
 # Set some default config variables

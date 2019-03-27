@@ -5,7 +5,6 @@ services:
 
 env:
   global:
-    - DOCKER_REPO=hackmdio/hackmd
     - CMD_VERSION=1.3.1
   matrix:
     - BASE=debian
@@ -31,16 +30,15 @@ script:
 
 after_success:
   # Push successful builds of the master branch to Docker Hub
-  # You need to define $DOCKER_REPO_PREFIX, $DOCKER_REPO_NAME, $DOCKER_USERNAME and $DOCKER_PASSWORD in your Travis settings.
-  # $DOCKER_REPO_PREFIX - Organisation of username who owns the repo on Docker Hub
-  # $DOCKER_REPO_NAME   - Repository name on Docker Hub
-  # $DOCKER_USERNAME    - Docker Hub username used to push the image
-  # $DOCKER_PASSWORD    - Password of the Docker Hub user used to push the image
+  # You need to define $CONTAINER_REPO_PREFIX, $CONTAINER_REPO_NAME, $CONTAINER_USERNAME and $CONTAINER_PASSWORD in your Travis settings.
+  # $CONTAINER_REPO_PREFIX - Organisation of username who owns the repo on Docker Hub
+  # $CONTAINER_REPO_NAME   - Repository name on Docker Hub
+  # $CONTAINER_USERNAME    - Docker Hub username used to push the image
+  # $CONTAINER_PASSWORD    - Password of the Docker Hub user used to push the image
   # See https://docs.travis-ci.com/user/environment-variables/#Defining-Variables-in-Repository-Settings
-  - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" == "master" ] && [ "$DOCKER_REPO_PREFIX" != "" ] && [ "$DOCKER_REPO_NAME" != "" ] && [ "$DOCKER_USERNAME" != "" ] && [ "$DOCKER_PASSWORD" != "" ]; then
-    tools/tagging.sh "${DOCKER_REPO_PREFIX}/${DOCKER_REPO_NAME}" "${CMD_VERSION:-latest}" "$BASE";
-    docker images "${DOCKER_REPO_PREFIX}/${DOCKER_REPO_NAME}";
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker images --format "{{.Repository}}:{{.Tag}}" "${DOCKER_REPO_PREFIX}/${DOCKER_REPO_NAME}" | xargs -L 1 docker push ;
-    docker run --rm -v "$(pwd)/:/data/:ro" -e "DOCKERHUB_USERNAME=$DOCKER_USERNAME" -e "DOCKERHUB_PASSWORD=$DOCKER_PASSWORD" -e "DOCKERHUB_REPO_PREFIX=$DOCKER_REPO_PREFIX" -e "DOCKERHUB_REPO_NAME=$DOCKER_REPO_NAME" sheogorath/readme-to-dockerhub;
+  - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" == "master" ] && [ "$CONTAINER_REPO_PREFIX" != "" ] && [ "$CONTAINER_REPO_NAME" != "" ] && [ "$CONTAINER_USERNAME" != "" ] && [ "$CONTAINER_PASSWORD" != "" ]; then
+    tools/tagging.sh "${CONTAINER_REPO_PREFIX}/${CONTAINER_REPO_NAME}" "${CMD_VERSION:-latest}" "$BASE";
+    docker images "${CONTAINER_REPO_PREFIX}/${CONTAINER_REPO_NAME}";
+    docker login -u="$CONTAINER_USERNAME" -p="$CONTAINER_PASSWORD" ${CONTAINER_REGISTRY:-docker.io};
+    docker images --format "{{.Repository}}:{{.Tag}}" "${CONTAINER_REPO_PREFIX}/${CONTAINER_REPO_NAME}" | xargs -L 1 docker push ;
     fi
