@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Use gosu if the container started with root privileges
+[ $(id -u) -eq 0] && GOSU="gosu codimd" || GOSU=""
+
 if [ "$HMD_DB_URL" != "" ] && [ "$CMD_DB_URL" = "" ]; then
     CMD_DB_URL="$HMD_DB_URL"
 fi
@@ -20,7 +23,7 @@ if [ "$DB_SOCKET" != "" ]; then
     dockerize -wait tcp://${DB_SOCKET} -timeout 30s
 fi
 
-gosu codimd node_modules/.bin/sequelize db:migrate
+$GOSU ./node_modules/.bin/sequelize db:migrate
 
 # Print warning if local data storage is used but no volume is mounted
 [ "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ] && { mountpoint -q ./public/uploads || {
@@ -41,7 +44,7 @@ gosu codimd node_modules/.bin/sequelize db:migrate
 } ; }
 
 # Change owner and permission if filesystem backend is used
-if [ "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ]; then
+if [ -z $GOSU && "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ]; then
     chown -R codimd ./public/uploads
     chmod 700 ./public/uploads
 fi
@@ -50,4 +53,4 @@ fi
 sleep 3
 
 # run
-exec gosu codimd "$@"
+exec $GOSU "$@"

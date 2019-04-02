@@ -9,7 +9,6 @@ env:
   matrix:
     - BASE=debian
     - BASE=alpine
-    - BASE=chart
 
 before_install:
   - sudo apt-get -qq update
