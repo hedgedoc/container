@@ -1,7 +1,8 @@
 #!/bin/sh
 
 # Use gosu if the container started with root privileges
-[ $(id -u) -eq 0] && GOSU="gosu codimd" || GOSU=""
+UID=$(id -u)
+[ $UID -eq 0] && GOSU="gosu codimd" || GOSU=""
 
 if [ "$HMD_DB_URL" != "" ] && [ "$CMD_DB_URL" = "" ]; then
     CMD_DB_URL="$HMD_DB_URL"
@@ -43,10 +44,27 @@ $GOSU ./node_modules/.bin/sequelize db:migrate
     ";
 } ; }
 
-# Change owner and permission if filesystem backend is used
-if [ -z $GOSU && "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ]; then
-    chown -R codimd ./public/uploads
-    chmod 700 ./public/uploads
+# Change owner and permission if filesystem backend is used and user has root permissions
+if [ $UID -eq 0 && "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ]; then
+    if [ $UID -eq 0 ]; then
+        chown -R codimd ./public/uploads
+        chmod 700 ./public/uploads
+    else
+        echo "
+            #################################################################
+            ###                                                           ###
+            ###                        !!!WARNING!!!                      ###
+            ###                                                           ###
+            ###        Container was started without root permissions     ###
+            ###           and filesystem storage is being used.           ###
+            ###        In case of filesystem errors these need to be      ###
+            ###                      changed manually                     ###
+            ###                                                           ###
+            ###                       !!!WARNING!!!                       ###
+            ###                                                           ###
+            #################################################################
+        ";
+    fi
 fi
 
 # Sleep to make sure everything is fine...

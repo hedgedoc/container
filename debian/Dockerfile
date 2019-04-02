@@ -3,6 +3,7 @@ FROM node:8.15.1
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY=https://github.com/codimd/server.git
 ARG VERSION=master
+ARG UID=10000
 
 # Set some default config variables
 ENV DEBIAN_FRONTEND noninteractive
@@ -67,7 +68,7 @@ RUN apt-get update && \
     apt-get remove -y --auto-remove build-essential git jq && \
     apt-get clean && apt-get purge && rm -r /var/lib/apt/lists/* && \
     # Create codimd user
-    adduser --uid 10000 --home /codimd/ --disabled-password --system codimd && \
+    adduser --uid $UID --home /codimd/ --disabled-password --system codimd && \
     chown -R codimd /codimd/
 
 WORKDIR /codimd
