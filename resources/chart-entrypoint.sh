@@ -41,4 +41,4 @@ fi
 } ; }
 
 # run
-exec codimd "$@"
+exec "$@"

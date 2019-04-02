@@ -13,8 +13,9 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-# Add configuraton files
+# Add configuraton and init files
 COPY resources/config.json resources/.sequelizerc /files/
+COPY resources/chart-entrypoint.sh /usr/local/bin/chart-entrypoint.sh
 
 RUN apt-get update && \
     apt-get install -y git build-essential jq && \
@@ -55,10 +56,6 @@ RUN apt-get update && \
 
 WORKDIR /codimd
 EXPOSE 3000
-
-COPY resources/chart-entrypoint.sh /usr/local/bin/chart-entrypoint.sh
-
-ENTRYPOINT ["/usr/local/bin/chart-entrypoint.sh"]
-
-CMD ["node", "app.js"]
 USER codimd
+ENTRYPOINT ["/usr/local/bin/chart-entrypoint.sh"]
+CMD ["node", "app.js"]
