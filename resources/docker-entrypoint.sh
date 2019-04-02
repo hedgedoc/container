@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Use gosu if the container started with root privileges
+UID=$(id -u)
+[ $UID -eq 0] && GOSU="gosu codimd" || GOSU=""
+
 if [ "$HMD_DB_URL" != "" ] && [ "$CMD_DB_URL" = "" ]; then
     CMD_DB_URL="$HMD_DB_URL"
 fi
@@ -20,7 +24,7 @@ if [ "$DB_SOCKET" != "" ]; then
     dockerize -wait tcp://${DB_SOCKET} -timeout 30s
 fi
 
-gosu codimd node_modules/.bin/sequelize db:migrate
+$GOSU ./node_modules/.bin/sequelize db:migrate
 
 # Print warning if local data storage is used but no volume is mounted
 [ "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ] && { mountpoint -q ./public/uploads || {
@@ -40,14 +44,31 @@ gosu codimd node_modules/.bin/sequelize db:migrate
     ";
 } ; }
 
-# Change owner and permission if filesystem backend is used
-if [ "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ]; then
-    chown -R codimd ./public/uploads
-    chmod 700 ./public/uploads
+# Change owner and permission if filesystem backend is used and user has root permissions
+if [ $UID -eq 0 && "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ]; then
+    if [ $UID -eq 0 ]; then
+        chown -R codimd ./public/uploads
+        chmod 700 ./public/uploads
+    else
+        echo "
+            #################################################################
+            ###                                                           ###
+            ###                        !!!WARNING!!!                      ###
+            ###                                                           ###
+            ###        Container was started without root permissions     ###
+            ###           and filesystem storage is being used.           ###
+            ###        In case of filesystem errors these need to be      ###
+            ###                      changed manually                     ###
+            ###                                                           ###
+            ###                       !!!WARNING!!!                       ###
+            ###                                                           ###
+            #################################################################
+        ";
+    fi
 fi
 
 # Sleep to make sure everything is fine...
 sleep 3
 
 # run
-exec gosu codimd "$@"
+exec $GOSU "$@"

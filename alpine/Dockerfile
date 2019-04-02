@@ -3,6 +3,7 @@ FROM node:8.15.1-alpine
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY=https://github.com/codimd/server.git
 ARG VERSION=master
+ARG UID=10000
 
 # Set some default config variables
 ENV DOCKERIZE_VERSION=v0.6.1
@@ -76,7 +77,7 @@ RUN apk add --no-cache --virtual .dep build-base openssl-dev python git jq bash 
     yarn install && \
     yarn cache clean && \
     apk del .dep && \
-    adduser -u 10000 -h /codimd/ -D -S codimd && \
+    adduser -u $UID -h /codimd/ -D -S codimd && \
     chown -R codimd /codimd/
 
 WORKDIR /codimd
