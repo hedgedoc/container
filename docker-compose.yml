@@ -46,6 +46,7 @@ services:
       web:
     labels:
        # This should be the external domain you want to use for Minio
+      - treafik.enabled=true
       - traefik.frontend.rule=Host:minio.example.org
       - traefik.port=9000
       - traefik.docker.network=web  
@@ -106,6 +107,7 @@ services:
       - CMD_MINIO_SECURE=false
     labels:
       # This should be the external domain you want to use for CodiMD
+      - treafik.enabled=true
       - traefik.frontend.rule=Host:codimd.example.org
       - traefik.port=3000
       - traefik.docker.network=web
@@ -134,6 +136,15 @@ services:
     restart: always
     networks:
       - web
+    # It is required to replace the email placeholder here for
+    # Let's Encrypt to work
+    command: >
+      "-c /dev/null --docker "
+      "--acme --acme.email=###email-address### "
+      "--acme.storage=/etc/traefik/acme/acme.json --acme.onhostrule "
+      "--entryPoints='Name:http Address::80 Redirect.EntryPoint:https' "
+      "--entryPoints='Name:https Address::443 Compress:true TLS' "
+      "--defaultentrypoints=http,https --docker.exposedbydefault=false"
     ports:
       # These ports should be exported to the network.
       # By default HTTPS will use self-signed certificates
@@ -146,6 +157,7 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - acme:/etc/traefik/acme
 
 
 # Define networks to allow best isolation
@@ -160,3 +172,4 @@ volumes:
   # Volume for PostgreSQL/MySQL database
   database: {}
   minio: {}
+  acme: {}
