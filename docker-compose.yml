@@ -136,6 +136,12 @@ services:
     restart: always
     networks:
       - web
+    #mem_limit: 256mb         # version 2 only
+    #memswap_limit: 512mb     # version 2 only
+    #read_only: true          # not supported in swarm mode please enable along with tmpfs
+    #tmpfs:
+    #  - /run/traefik:size=512K
+    #  - /tmp:size=256K
     # It is required to replace the email placeholder here for
     # Let's Encrypt to work
     command: >
