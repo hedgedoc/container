@@ -32,11 +32,23 @@ services:
     environment:
       - MINIO_ACCESS_KEY=randomCodiMDKey
       - MINIO_SECRET_KEY=randomCodiMDSecret
+    #mem_limit: 256mb         # version 2 only
+    #memswap_limit: 512mb     # version 2 only
+    #read_only: true          # not supported in swarm mode please enable along with tmpfs
+    #tmpfs:
+    #  - /run/minio:size=512K
+    #  - /tmp:size=256K
     # Normally this requires to manually create a bucket
     # but with the command it will automatically create a bucket
-    command: -c 'mkdir -p /data/codimd && minio server /codimd'
+    command: -c 'mkdir -p /data/codimd && minio server /data'
     networks:
       backend:
+      web:
+    labels:
+       # This should be the external domain you want to use for Minio
+      - traefik.frontend.rule=Host:minio.example.org
+      - traefik.port=9000
+      - traefik.docker.network=web  
 
   # MySQL example
   # Most of the documentation that applies to PostgreSQL applies also to MySQL
@@ -118,7 +130,7 @@ services:
   # traefik is used as reverse proxy for CodiMD
   # It automatically listens on docker for exposed services
   # in the web network
-    image: traefik:2.0-alpine
+    image: traefik:1.7-alpine
     restart: always
     networks:
       - web
