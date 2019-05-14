@@ -144,13 +144,13 @@ services:
     #  - /tmp:size=256K
     # It is required to replace the email placeholder here for
     # Let's Encrypt to work
-    command: >
-      "-c /dev/null --docker "
-      "--acme --acme.email=###email-address### "
-      "--acme.storage=/etc/traefik/acme/acme.json --acme.onhostrule "
-      "--entryPoints='Name:http Address::80 Redirect.EntryPoint:https' "
-      "--entryPoints='Name:https Address::443 Compress:true TLS' "
-      "--defaultentrypoints=http,https --docker.exposedbydefault=false"
+    command: >-
+      -c /dev/null --docker 
+      --acme --acme.email=###email-address### 
+      --acme.storage=/etc/traefik/acme/acme.json --acme.onhostrule 
+      --entryPoints='Name:http Address::80 Redirect.EntryPoint:https' 
+      --entryPoints='Name:https Address::443 Compress:true TLS' 
+      --defaultentrypoints=http,https --docker.exposedbydefault=false
     ports:
       # These ports should be exported to the network.
       # By default HTTPS will use self-signed certificates
