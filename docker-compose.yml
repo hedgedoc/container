@@ -23,6 +23,21 @@ services:
       backend:
     restart: always
 
+  # Minio will be used as S3 Provider for image uploads
+  imagestore:
+    image: minio/minio:RELEASE.2019-05-02T19-07-09Z
+    restart: always
+    volumes:
+      - minio:/data
+    environment:
+      - MINIO_ACCESS_KEY=randomCodiMDKey
+      - MINIO_SECRET_KEY=randomCodiMDSecret
+    # Normally this requires to manually create a bucket
+    # but with the command it will automatically create a bucket
+    command: -c 'mkdir -p /data/codimd && minio server /codimd'
+    networks:
+      backend:
+
   # MySQL example
   # Most of the documentation that applies to PostgreSQL applies also to MySQL
   #database:
@@ -69,26 +84,67 @@ services:
       # - sqlite:///data/sqlite.db (NOT RECOMMENDED)
       # - For details see the official sequelize docs: http://docs.sequelizejs.com/en/v3/
       - CMD_DB_URL=postgres://hackmd:hackmdpass@database:5432/hackmd
-    ports:
+      # Minio S3 Configuration
+      - CMD_IMAGE_UPLOAD_TYPE=minio
+      - CMD_S3_BUCKET=codimd
+      - CMD_MINIO_ACCESS_KEY=randomCodiMDKey
+      - CMD_MINIO_SECRET_KEY=randomCodiMDSecret
+      - CMD_MINIO_ENDPOINT=imagestore
+      - CMD_MINIO_PORT=9000
+      - CMD_MINIO_SECURE=false
+    labels:
+      # This should be the external domain you want to use for CodiMD
+      - traefik.frontend.rule=Host:codimd.example.org
+      - traefik.port=3000
+      - traefik.docker.network=web
+    # Alternatively if you don't want to use the traefik reverse proxy you can publish
+    # CodiMD directly with a port as explained below
+    #ports:
       # Ports that are published to the outside.
       # The latter port is the port inside the container. It should always stay on 3000
       # If you only specify a port it'll published on all interfaces. If you want to use a
       # local reverse proxy, you may want to listen on 127.0.0.1.
       # Example:
       # - "127.0.0.1:3000:3000"
-      - "3000:3000"
+      #- "3000:3000"
     networks:
       backend:
+      web:
     restart: always
     depends_on:
       - database
+      - imagestore
+  reverseproxy:
+  # traefik is used as reverse proxy for CodiMD
+  # It automatically listens on docker for exposed services
+  # in the web network
+    image: traefik:2.0-alpine
+    restart: always
+    networks:
+      - web
+    ports:
+      # These ports should be exported to the network.
+      # By default HTTPS will use self-signed certificates
+      # but with some extra configuration traefik can automatically request
+      # Let's Encrypt certificates:
+      # https://docs.traefik.io/configuration/acme/
+      # Example:
+      # - "127.0.0.1:80:80"
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
 
 # Define networks to allow best isolation
 networks:
   # Internal network for communication with PostgreSQL/MySQL
   backend:
+  # Network that includes components that will be exported
+  web:
 
 # Define named volumes so data stays in place
 volumes:
   # Volume for PostgreSQL/MySQL database
-  database:
+  database: {}
+  minio: {}
