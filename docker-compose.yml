@@ -105,6 +105,11 @@ services:
       - CMD_MINIO_ENDPOINT=imagestore
       - CMD_MINIO_PORT=9000
       - CMD_MINIO_SECURE=false
+      - CMD_URL_ADDPORT=false
+      - CMD_PROTOCOL_USESSL=true
+      # This domain name should be the same as the one exported to traefik below
+      - CMD_DOMAIN=codimd.example.org
+      
     labels:
       # This should be the external domain you want to use for CodiMD
       - treafik.enabled=true
