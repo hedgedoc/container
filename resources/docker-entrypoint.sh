@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # Use gosu if the container started with root privileges
-UID=$(id -u)
-[ $UID -eq 0] && GOSU="gosu codimd" || GOSU=""
+UID="$(id -u)"
+[ "$UID" -eq 0 ] && GOSU="gosu codimd" || GOSU=""
 
 if [ "$HMD_DB_URL" != "" ] && [ "$CMD_DB_URL" = "" ]; then
     CMD_DB_URL="$HMD_DB_URL"
@@ -21,7 +21,7 @@ export CMD_DB_URL
 DB_SOCKET=$(echo ${CMD_DB_URL} | sed -e 's/.*:\/\//\/\//' -e 's/.*\/\/[^@]*@//' -e 's/\/.*$//')
 
 if [ "$DB_SOCKET" != "" ]; then
-    dockerize -wait tcp://${DB_SOCKET} -timeout 30s
+    dockerize -wait "tcp://${DB_SOCKET}" -timeout 30s
 fi
 
 $GOSU ./node_modules/.bin/sequelize db:migrate
@@ -45,8 +45,8 @@ $GOSU ./node_modules/.bin/sequelize db:migrate
 } ; }
 
 # Change owner and permission if filesystem backend is used and user has root permissions
-if [ $UID -eq 0 && "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ]; then
-    if [ $UID -eq 0 ]; then
+if [ "$UID" -eq 0 ] && [ "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ]; then
+    if [ "$UID" -eq 0 ]; then
         chown -R codimd ./public/uploads
         chmod 700 ./public/uploads
     else
