@@ -12,7 +12,9 @@ if [ "$HMD_IMAGE_UPLOAD_TYPE" != "" ] && [ "$CMD_IMAGE_UPLOAD_TYPE" = "" ]; then
     CMD_IMAGE_UPLOAD_TYPE="$HMD_IMAGE_UPLOAD_TYPE"
 fi
 
-if [ "$CMD_DB_URL" = "" ]; then
+if [ "$CMD_DB_URL_FILE" != "" ]; then
+    CMD_DB_URL=`cat "$CMD_DB_URL_FILE"`
+elif [ "$CMD_DB_URL" = "" ]; then
     CMD_DB_URL="postgres://hackmd:hackmdpass@hackmdPostgres:5432/hackmd"
 fi
 
