@@ -91,8 +91,10 @@ Start your docker and enter the terminal, follow below commands:
 
 ## Restore
 
-Similar to backup steps, but last command is
+Before starting the application for the first time, run these commands:
+
 ```bash
+docker-compose up -d database
 cat backup.sql | docker exec -i $(docker-compose ps -q database) psql -U hackmd
 ```
 
