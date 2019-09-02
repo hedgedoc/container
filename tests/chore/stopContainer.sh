@@ -1,7 +1,7 @@
 #!/bin/sh
 echo "
          ######################################
-         ###          Default test          ###
+         ###       Stopping container       ###
          ######################################
 "
 
@@ -9,6 +9,7 @@ echo "
 # Make sure tests fails if a commend ends without 0
 set -e
 
-wget -O- http://127.0.0.1:${PORT}/
+docker ps -f id=${DOCKERCONTAINER}
 
-docker logs ${DOCKERCONTAINER}
+# Clean up
+docker stop ${DOCKERCONTAINER} && docker rm ${DOCKERCONTAINER}

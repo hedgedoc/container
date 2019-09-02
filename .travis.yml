@@ -26,7 +26,9 @@ before_script:
 
 script:
   # Run all tests from test directory
+  - ./tests/chore/startContainer.sh
   - ls tests/*.sh | parallel
+  - ./tests/chore/stopContainer.sh
 
 after_success:
   # Push successful builds of the master branch to Docker Hub
