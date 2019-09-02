@@ -1,7 +1,7 @@
 #!/bin/sh
 echo "
          ######################################
-         ###         New note test          ###
+         ###       Stopping container       ###
          ######################################
 "
 
@@ -10,8 +10,8 @@ echo "
 set -e
 
 DOCKERCONTAINER=$(docker ps -qf name=codimd-testing)
-PORT=$(echo $(docker port $DOCKERCONTAINER) | cut -d: -f2)
 
-wget -O- http://127.0.0.1:${PORT}/new
+docker ps -f id=${DOCKERCONTAINER}
 
-docker logs ${DOCKERCONTAINER}
+# Clean up
+docker stop ${DOCKERCONTAINER} && docker rm ${DOCKERCONTAINER}
