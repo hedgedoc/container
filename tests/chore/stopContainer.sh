@@ -9,6 +9,8 @@ echo "
 # Make sure tests fails if a commend ends without 0
 set -e
 
+DOCKERCONTAINER=$(docker ps -qf name=codimd-testing)
+
 docker ps -f id=${DOCKERCONTAINER}
 
 # Clean up
