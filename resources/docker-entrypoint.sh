@@ -12,6 +12,12 @@ if [ "$HMD_IMAGE_UPLOAD_TYPE" != "" ] && [ "$CMD_IMAGE_UPLOAD_TYPE" = "" ]; then
     CMD_IMAGE_UPLOAD_TYPE="$HMD_IMAGE_UPLOAD_TYPE"
 fi
 
+DOCKER_SECRET_DB_URL_FILE_PATH="/run/secrets/dbURL"
+
+if [ -f "$DOCKER_SECRET_DB_URL_FILE_PATH" ]; then
+    CMD_DB_URL="$(cat $DOCKER_SECRET_DB_URL_FILE_PATH)"
+fi
+
 if [ "$CMD_DB_URL" = "" ]; then
     CMD_DB_URL="postgres://hackmd:hackmdpass@hackmdPostgres:5432/hackmd"
 fi
