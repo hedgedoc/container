@@ -26,7 +26,9 @@ before_script:
 
 script:
   # Run all tests from test directory
-  - ls tests/*.sh | parallel
+  - tests/version.sh
+  - tests/default.sh
+  - tests/newNote.sh
 
 after_success:
   # Push successful builds of the master branch to Docker Hub
