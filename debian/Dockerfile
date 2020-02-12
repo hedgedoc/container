@@ -6,8 +6,8 @@ ARG VERSION=master
 ARG UID=10000
 
 # Set some default config variables
-ENV DEBIAN_FRONTEND noninteractive
-ENV DOCKERIZE_VERSION v0.6.1
+ARG DEBIAN_FRONTEND=noninteractive
+ENV DOCKERIZE_VERSION=v0.6.1
 ENV NODE_ENV=production
 
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
@@ -15,7 +15,7 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 ENV GOSU_VERSION 1.11
-COPY resources/gosu-gpg.key /tmp/gosu.key
+COPY ["resources/gosu-gpg.key", "/tmp/gosu.key"]
 RUN set -ex; \
     dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
     wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
@@ -32,12 +32,15 @@ RUN set -ex; \
     gosu nobody true
 
 # Add configuraton files
-COPY resources/config.json resources/.sequelizerc /files/
+COPY ["resources/config.json", "resources/.sequelizerc", "/files/"]
 
 RUN apt-get update && \
-    apt-get install -y git build-essential jq && \
-    # Add fonts for PDF export
-    apt-get install -y fonts-noto && \
+    apt-get install --no-install-recommends -y \
+      build-essential \
+      git \
+      jq \
+      # Add fonts for PDF export
+      fonts-noto && \
 
     # Clone the source
     git clone --depth 1 --branch "$VERSION" "$CODIMD_REPOSITORY" /codimd && \
@@ -54,8 +57,10 @@ RUN apt-get update && \
     mv /codimd/package.new.json /codimd/package.json && \
 
     # Symlink configuration files
-    rm -f /codimd/config.json && ln -s /files/config.json /codimd/config.json && \
-    rm -f /codimd/.sequelizerc && ln -s /files/.sequelizerc /codimd/.sequelizerc && \
+    rm -f /codimd/config.json && \
+    ln -s /files/config.json /codimd/config.json && \
+    rm -f /codimd/.sequelizerc && \
+    ln -s /files/.sequelizerc /codimd/.sequelizerc && \
 
     # Install NPM dependencies and build project
     yarn install --pure-lockfile && \
@@ -66,7 +71,8 @@ RUN apt-get update && \
     yarn install && \
     yarn cache clean && \
     apt-get remove -y --auto-remove build-essential git jq && \
-    apt-get clean && apt-get purge && rm -r /var/lib/apt/lists/* && \
+    apt-get purge && \
+    rm -r /var/lib/apt/lists/* && \
     # Create codimd user
     adduser --uid $UID --home /codimd/ --disabled-password --system codimd && \
     chown -R codimd /codimd/
@@ -74,7 +80,7 @@ RUN apt-get update && \
 WORKDIR /codimd
 EXPOSE 3000
 
-COPY resources/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY ["resources/docker-entrypoint.sh", "/usr/local/bin/docker-entrypoint.sh"]
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 

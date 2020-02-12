@@ -13,14 +13,16 @@ ENV NODE_ENV=production
 # PhantomJS is broken on alpine and crashes CodiMD
 ENV CMD_ALLOW_PDF_EXPORT=false
 
-RUN apk add --no-cache --virtual .download wget  ca-certificates && \
+RUN apk add --no-cache --virtual .download \
+      ca-certificates \
+      wget && \
     wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     apk del .download
 
-ENV GOSU_VERSION 1.11
-COPY resources/gosu-gpg.key /tmp/gosu.key
+ENV GOSU_VERSION=1.11
+COPY [ "resources/gosu-gpg.key", "/tmp/gosu.key" ]
 RUN set -ex; \
     \
     apk add --no-cache --virtual .gosu-deps \
@@ -48,10 +50,16 @@ RUN set -ex; \
     apk del .gosu-deps
 
 # Add configuraton files
-COPY resources/config.json resources/.sequelizerc /files/
+COPY ["resources/config.json", "resources/.sequelizerc", "/files/"]
 
 # Install all dependencies and build project
-RUN apk add --no-cache --virtual .dep build-base openssl-dev python git jq bash && \
+RUN apk add --no-cache --virtual .dep \
+      bash \
+      build-base \
+      git \
+      jq \
+      openssl-dev \
+      python && \
     # Clone the source
     git clone --depth 1 --branch "$VERSION" "$CODIMD_REPOSITORY" /codimd && \
     # Print the cloned version and clean up git files
@@ -66,25 +74,29 @@ RUN apk add --no-cache --virtual .dep build-base openssl-dev python git jq bash 
     mv /codimd/package.new.json /codimd/package.json && \
 
     # Symlink configuration files
-    rm -f /codimd/config.json && ln -s /files/config.json /codimd/config.json && \
-    rm -f /codimd/.sequelizerc && ln -s /files/.sequelizerc /codimd/.sequelizerc && \
+    rm -f /codimd/config.json && \
+    ln -s /files/config.json /codimd/config.json && \
+    rm -f /codimd/.sequelizerc && \
+    ln -s /files/.sequelizerc /codimd/.sequelizerc && \
+
     # Install NPM dependencies and build project
     yarn install --pure-lockfile && \
     yarn install --production=false --pure-lockfile && \
     #yarn global add webpack && \
     npm run build && \
+
     # Clean up this layer
     yarn install && \
     yarn cache clean && \
     apk del .dep && \
+
     adduser -u $UID -h /codimd/ -D -S codimd && \
     chown -R codimd /codimd/
 
 WORKDIR /codimd
 EXPOSE 3000
 
-# Add entrypoint and set command
-COPY resources/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY ["resources/docker-entrypoint.sh", "/usr/local/bin/docker-entrypoint.sh"]
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 CMD ["node", "app.js"]
