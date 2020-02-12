@@ -21,7 +21,7 @@ RUN apk add --no-cache --virtual .download \
     rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     apk del .download
 
-ENV GOSU_VERSION 1.11
+ENV GOSU_VERSION=1.11
 COPY [ "resources/gosu-gpg.key", "/tmp/gosu.key" ]
 RUN set -ex; \
     \
