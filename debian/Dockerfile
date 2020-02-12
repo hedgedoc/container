@@ -15,7 +15,7 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 ENV GOSU_VERSION 1.11
-COPY resources/gosu-gpg.key /tmp/gosu.key
+COPY ["resources/gosu-gpg.key", "/tmp/gosu.key"]
 RUN set -ex; \
     dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
     wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
@@ -32,7 +32,7 @@ RUN set -ex; \
     gosu nobody true
 
 # Add configuraton files
-COPY resources/config.json resources/.sequelizerc /files/
+COPY ["resources/config.json", "resources/.sequelizerc", "/files/"]
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \

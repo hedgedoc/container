@@ -50,7 +50,7 @@ RUN set -ex; \
     apk del .gosu-deps
 
 # Add configuraton files
-COPY resources/config.json resources/.sequelizerc /files/
+COPY ["resources/config.json", "resources/.sequelizerc", "/files/"]
 
 # Install all dependencies and build project
 RUN apk add --no-cache --virtual .dep \
