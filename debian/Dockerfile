@@ -66,7 +66,7 @@ RUN apt-get update && \
     yarn install && \
     yarn cache clean && \
     apt-get remove -y --auto-remove build-essential git jq && \
-    apt-get clean && apt-get purge && rm -r /var/lib/apt/lists/* && \
+    apt-get purge && rm -r /var/lib/apt/lists/* && \
     # Create codimd user
     adduser --uid $UID --home /codimd/ --disabled-password --system codimd && \
     chown -R codimd /codimd/
