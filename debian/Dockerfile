@@ -35,7 +35,7 @@ RUN set -ex; \
 COPY resources/config.json resources/.sequelizerc /files/
 
 RUN apt-get update && \
-    apt-get install -y \
+    apt-get install --no-install-recommends -y \
       build-essential \
       git \
       jq \
