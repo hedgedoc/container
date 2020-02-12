@@ -6,7 +6,7 @@ ARG VERSION=master
 ARG UID=10000
 
 # Set some default config variables
-ENV DEBIAN_FRONTEND=noninteractive
+ARG DEBIAN_FRONTEND=noninteractive
 ENV DOCKERIZE_VERSION=v0.6.1
 ENV NODE_ENV=production
 
