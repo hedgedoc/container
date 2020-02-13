@@ -1,4 +1,4 @@
-FROM node:12.16.0
+FROM node:12.16.0-slim
 
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY=https://github.com/codimd/server.git
@@ -10,38 +10,54 @@ ARG DEBIAN_FRONTEND=noninteractive
 ENV DOCKERIZE_VERSION=v0.6.1
 ENV NODE_ENV=production
 
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y \
+      ca-certificates \
+      wget && \
+    rm -r /var/lib/apt/lists/*
+
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 ENV GOSU_VERSION 1.11
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 COPY ["resources/gosu-gpg.key", "/tmp/gosu.key"]
 RUN set -ex; \
+    apt-get update && \
+    apt-get install --no-install-recommends -qy \
+      gpg && \
     dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
     wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
     wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc"; \
     \
-# verify the signature
+    # verify the signature
     export GNUPGHOME="$(mktemp -d)"; \
     gpg --no-tty --import /tmp/gosu.key; \
     gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
     rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc; \
     \
     chmod +x /usr/local/bin/gosu; \
-# verify that the binary works
-    gosu nobody true
+    # verify that the binary works
+    gosu nobody true && \
+    apt-get autoremove --purge -qy \
+      gpg && \
+    rm -r /var/lib/apt/lists/*
 
 # Add configuraton files
 COPY ["resources/config.json", "resources/.sequelizerc", "/files/"]
 
-RUN apt-get update && \
+RUN export dev_apt=( \
+      "bzip2" \
+      "git" \
+      "jq" \
+    ) && \
+    apt-get update && \
     apt-get install --no-install-recommends -y \
-      build-essential \
-      git \
-      jq \
+      "${dev_apt[@]}" \
       # Add fonts for PDF export
       fonts-noto && \
-
+    \
     # Clone the source
     git clone --depth 1 --branch "$VERSION" "$CODIMD_REPOSITORY" /codimd && \
     # Print the cloned version and clean up git files
@@ -49,29 +65,28 @@ RUN apt-get update && \
     git log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1 && echo && \
     git rev-parse HEAD > /tmp/gitref && \
     rm -rf /codimd/.git && \
-
+    \
     # Mime the git repository for fullversion
     mkdir /codimd/.git && \
     mv /tmp/gitref /codimd/.git/HEAD && \
     jq ".repository.url = \"${CODIMD_REPOSITORY}\"" /codimd/package.json > /codimd/package.new.json && \
     mv /codimd/package.new.json /codimd/package.json && \
-
+    \
     # Symlink configuration files
     rm -f /codimd/config.json && \
     ln -s /files/config.json /codimd/config.json && \
     rm -f /codimd/.sequelizerc && \
     ln -s /files/.sequelizerc /codimd/.sequelizerc && \
-
+    \
     # Install NPM dependencies and build project
     yarn install --pure-lockfile && \
     yarn install --production=false --pure-lockfile && \
     npm run build && \
-
+    \
     # Clean up this layer
     yarn install && \
     yarn cache clean && \
-    apt-get remove -y --auto-remove build-essential git jq && \
-    apt-get purge && \
+    apt-get autoremove --purge -qy "${dev_apt[@]}" && \
     rm -r /var/lib/apt/lists/* && \
     # Create codimd user
     adduser --uid $UID --home /codimd/ --disabled-password --system codimd && \

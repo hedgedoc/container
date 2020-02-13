@@ -72,24 +72,24 @@ RUN apk add --no-cache --virtual .dep \
     mv /tmp/gitref /codimd/.git/HEAD && \
     jq ".repository.url = \"${CODIMD_REPOSITORY}\"" /codimd/package.json > /codimd/package.new.json && \
     mv /codimd/package.new.json /codimd/package.json && \
-
+    \
     # Symlink configuration files
     rm -f /codimd/config.json && \
     ln -s /files/config.json /codimd/config.json && \
     rm -f /codimd/.sequelizerc && \
     ln -s /files/.sequelizerc /codimd/.sequelizerc && \
-
+    \
     # Install NPM dependencies and build project
     yarn install --pure-lockfile && \
     yarn install --production=false --pure-lockfile && \
     #yarn global add webpack && \
     npm run build && \
-
+    \
     # Clean up this layer
     yarn install && \
     yarn cache clean && \
     apk del .dep && \
-
+    \
     adduser -u $UID -h /codimd/ -D -S codimd && \
     chown -R codimd /codimd/
 
