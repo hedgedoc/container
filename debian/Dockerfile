@@ -47,11 +47,14 @@ RUN set -ex; \
 # Add configuraton files
 COPY ["resources/config.json", "resources/.sequelizerc", "/files/"]
 
-RUN apt-get update && \
+RUN export dev_apt=( \
+      "bzip2" \
+      "git" \
+      "jq" \
+    ) && \
+    apt-get update && \
     apt-get install --no-install-recommends -y \
-      build-essential \
-      git \
-      jq \
+      "${dev_apt[@]}" \
       # Add fonts for PDF export
       fonts-noto && \
 
@@ -83,8 +86,7 @@ RUN apt-get update && \
     # Clean up this layer
     yarn install && \
     yarn cache clean && \
-    apt-get remove -y --auto-remove build-essential git jq && \
-    apt-get purge && \
+    apt-get autoremove --purge -qy "${dev_apt[@]}" && \
     rm -r /var/lib/apt/lists/* && \
     # Create codimd user
     adduser --uid $UID --home /codimd/ --disabled-password --system codimd && \
