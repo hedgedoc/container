@@ -30,15 +30,15 @@ RUN set -ex; \
     dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
     wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
     wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc"; \
-
-# verify the signature
+    \
+    # verify the signature
     export GNUPGHOME="$(mktemp -d)"; \
     gpg --no-tty --import /tmp/gosu.key; \
     gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
     rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc; \
-
+    \
     chmod +x /usr/local/bin/gosu; \
-# verify that the binary works
+    # verify that the binary works
     gosu nobody true && \
     apt-get autoremove --purge -qy \
       gpg && \
@@ -57,7 +57,7 @@ RUN export dev_apt=( \
       "${dev_apt[@]}" \
       # Add fonts for PDF export
       fonts-noto && \
-
+    \
     # Clone the source
     git clone --depth 1 --branch "$VERSION" "$CODIMD_REPOSITORY" /codimd && \
     # Print the cloned version and clean up git files
@@ -65,24 +65,24 @@ RUN export dev_apt=( \
     git log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1 && echo && \
     git rev-parse HEAD > /tmp/gitref && \
     rm -rf /codimd/.git && \
-
+    \
     # Mime the git repository for fullversion
     mkdir /codimd/.git && \
     mv /tmp/gitref /codimd/.git/HEAD && \
     jq ".repository.url = \"${CODIMD_REPOSITORY}\"" /codimd/package.json > /codimd/package.new.json && \
     mv /codimd/package.new.json /codimd/package.json && \
-
+    \
     # Symlink configuration files
     rm -f /codimd/config.json && \
     ln -s /files/config.json /codimd/config.json && \
     rm -f /codimd/.sequelizerc && \
     ln -s /files/.sequelizerc /codimd/.sequelizerc && \
-
+    \
     # Install NPM dependencies and build project
     yarn install --pure-lockfile && \
     yarn install --production=false --pure-lockfile && \
     npm run build && \
-
+    \
     # Clean up this layer
     yarn install && \
     yarn cache clean && \
