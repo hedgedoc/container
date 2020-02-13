@@ -21,6 +21,7 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 ENV GOSU_VERSION 1.11
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 COPY ["resources/gosu-gpg.key", "/tmp/gosu.key"]
 RUN set -ex; \
     apt-get update && \
