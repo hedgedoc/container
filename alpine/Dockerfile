@@ -50,7 +50,7 @@ RUN set -ex; \
     apk del .gosu-deps
 
 # Add configuraton files
-COPY ["resources/config.json", "resources/.sequelizerc", "/files/"]
+COPY ["resources/config.json", "resources/.sequelizerc", "resources/default.md", "/files/"]
 
 # Install all dependencies and build project
 RUN apk add --no-cache --virtual .dep \
@@ -78,6 +78,8 @@ RUN apk add --no-cache --virtual .dep \
     ln -s /files/config.json /codimd/config.json && \
     rm -f /codimd/.sequelizerc && \
     ln -s /files/.sequelizerc /codimd/.sequelizerc && \
+    rm -f /codimd/public/default.md && \
+    ln -s /files/default.md /codimd/public/default.md && \
     \
     # Install NPM dependencies and build project
     yarn install --pure-lockfile && \

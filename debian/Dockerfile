@@ -45,7 +45,7 @@ RUN set -ex; \
     rm -r /var/lib/apt/lists/*
 
 # Add configuraton files
-COPY ["resources/config.json", "resources/.sequelizerc", "/files/"]
+COPY ["resources/config.json", "resources/.sequelizerc", "resources/default.md", "/files/"]
 
 RUN export dev_apt=( \
       "bzip2" \
@@ -77,6 +77,8 @@ RUN export dev_apt=( \
     ln -s /files/config.json /codimd/config.json && \
     rm -f /codimd/.sequelizerc && \
     ln -s /files/.sequelizerc /codimd/.sequelizerc && \
+    rm -f /codimd/public/default.md && \
+    ln -s /files/default.md /codimd/public/default.md && \
     \
     # Install NPM dependencies and build project
     yarn install --pure-lockfile && \
