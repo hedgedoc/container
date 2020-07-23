@@ -63,7 +63,7 @@ services:
     #  # Make sure you remove this when you use filesystem as upload type
     #  - /codimd/public/uploads:size=10M
     environment:
-      # DB_URL is formatted like: <databasetype>://<username>:<password>@<hostname>/<database>
+      # DB_URL is formatted like: <databasetype>://<username>:<password>@<hostname>:<port>/<database>
       # Other examples are:
       # - mysql://hackmd:hackmdpass@database:3306/hackmd
       # - sqlite:///data/sqlite.db (NOT RECOMMENDED)
