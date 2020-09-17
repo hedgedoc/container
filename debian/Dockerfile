@@ -1,4 +1,4 @@
-FROM node:12.18.3-slim
+FROM node:12.18.4-slim
 
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY=https://github.com/codimd/server.git
