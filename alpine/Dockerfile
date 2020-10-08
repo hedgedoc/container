@@ -21,34 +21,6 @@ RUN apk add --no-cache --virtual .download \
     rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
     apk del .download
 
-ENV GOSU_VERSION=1.11
-COPY [ "resources/gosu-gpg.key", "/tmp/gosu.key" ]
-RUN set -ex; \
-    \
-    apk add --no-cache --virtual .gosu-deps \
-        wget \
-        ca-certificates \
-        dpkg \
-        gnupg \
-        openssl \
-    ; \
-    \
-    dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
-    wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
-    wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc"; \
-    \
-# verify the signature
-    export GNUPGHOME="$(mktemp -d)"; \
-    gpg --import /tmp/gosu.key; \
-    gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
-    rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc; \
-    \
-    chmod +x /usr/local/bin/gosu; \
-# verify that the binary works
-    gosu nobody true; \
-    \
-    apk del .gosu-deps
-
 # Add configuraton files
 COPY ["resources/config.json", "resources/.sequelizerc", "/files/"]
 
@@ -60,6 +32,8 @@ RUN apk add --no-cache --virtual .dep \
       jq \
       openssl-dev \
       python && \
+    apk add --no-cache --no-progress --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ \
+      gosu && \
     # Clone the source
     git clone --depth 1 --branch "$VERSION" "$CODIMD_REPOSITORY" /codimd && \
     # Print the cloned version and clean up git files
