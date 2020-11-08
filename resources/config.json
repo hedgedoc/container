@@ -3,10 +3,10 @@
         "urlAddPort": true,
         "email": true,
         "db": {
-            "username": "hackmd",
-            "password": "hackmdpass",
-            "database": "hackmd",
-            "host": "hackmdPostgres",
+            "username": "hedgedoc",
+            "password": "hedgedocpass",
+            "database": "hedgedoc",
+            "host": "hedgedocPostgres",
             "port": "5432",
             "dialect": "postgres"
         }

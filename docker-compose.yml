@@ -14,9 +14,9 @@ services:
     #  - /run/postgresql:size=512K
     #  - /tmp:size=256K
     environment:
-      - POSTGRES_USER=hackmd
-      - POSTGRES_PASSWORD=hackmdpass
-      - POSTGRES_DB=hackmd
+      - POSTGRES_USER=hedgedoc
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=hedgedoc
     volumes:
       - database:/var/lib/postgresql/data
     networks:
@@ -31,14 +31,14 @@ services:
   #    # should have a backup
   #    image: mariadb:10
   #    environment:
-  #      - MYSQL_USER=hackmd
-  #      - MYSQL_PASSWORD=hackmdpass
-  #      - MYSQL_DATABASE=hackmd
+  #      - MYSQL_USER=hedgedoc
+  #      - MYSQL_PASSWORD=password
+  #      - MYSQL_DATABASE=hedgedoc
   #      - MYSQL_ALLOW_EMPTY_PASSWORD=true
   #    volumes:
   #      - database:/var/lib/mysql
   #      # This config provides UTF-8 support to the database by default
-  #      # If this config is not used, HackMD breaks as it tries to write
+  #      # If this config is not used, HedgeDoc breaks as it tries to write
   #      # UTF-8 to a latin database.
   #      - ./resources/utf8.cnf:/etc/mysql/conf.d/utf8.cnf
   #    networks:
@@ -52,24 +52,24 @@ services:
     #  dockerfile: debian/Dockerfile
     #  args:
     #    - "VERSION=master"
-    #    - "CODIMD_REPOSITORY=https://github.com/codimd/server.git"
-    image: quay.io/codimd/server:1.6.0
+    #    - "HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git"
+    image: quay.io/hedgedoc/hedgedoc:1.6.0
     #mem_limit: 256mb         # version 2 only
     #memswap_limit: 512mb     # version 2 only
     #read_only: true          # not supported in swarm mode, enable along with tmpfs
     #tmpfs:
     #  - /tmp:size=10M
     #  # Make sure you remove this when you use filesystem as upload type
-    #  - /codimd/public/uploads:size=10M
+    #  - /hedgedoc/public/uploads:size=10M
     environment:
       # DB_URL is formatted like: <databasetype>://<username>:<password>@<hostname>:<port>/<database>
       # Other examples are:
-      # - mysql://hackmd:hackmdpass@database:3306/hackmd
+      # - mysql://hedgedoc:password@database:3306/hedgedoc
       # - sqlite:///data/sqlite.db (NOT RECOMMENDED)
       # - For details see the official sequelize docs: http://docs.sequelizejs.com/en/v3/
-      - CMD_DB_URL=postgres://hackmd:hackmdpass@database:5432/hackmd
+      - CMD_DB_URL=postgres://hedgedoc:password@database:5432/hedgedoc
     volumes:
-      - uploads:/codimd/public/uploads
+      - uploads:/hedgedoc/public/uploads
     ports:
       # Ports that are published to the outside.
       # The latter port is the port inside the container. It should always stay on 3000

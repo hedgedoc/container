@@ -1,9 +1,12 @@
 FROM node:12.19.1-slim
 
 # Build arguments to change source url, branch or tag
-ARG CODIMD_REPOSITORY=https://github.com/codimd/server.git
+ARG HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git
 ARG VERSION=master
 ARG UID=10000
+
+ARG CODIMD_REPOSITORY
+RUN if [ -n "${CODIMD_REPOSITORY}" ]; then echo "CODIMD_REPOSITORY is deprecated. Please use HEDGEDOC_REPOSITORY instead" && exit 1; fi
 
 # Set some default config variables
 ARG DEBIAN_FRONTEND=noninteractive
@@ -37,24 +40,25 @@ RUN export dev_apt=( \
       gosu && \
     \
     # Clone the source
-    git clone --depth 1 --branch "$VERSION" "$CODIMD_REPOSITORY" /codimd && \
+    git clone --depth 1 --branch "$VERSION" "$HEDGEDOC_REPOSITORY" /hedgedoc && \
+    ln -s /hedgedoc /codimd && \
     # Print the cloned version and clean up git files
-    cd /codimd && \
+    cd /hedgedoc && \
     git log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1 && echo && \
     git rev-parse HEAD > /tmp/gitref && \
-    rm -rf /codimd/.git && \
+    rm -rf /hedgedoc/.git && \
     \
     # Mime the git repository for fullversion
-    mkdir /codimd/.git && \
-    mv /tmp/gitref /codimd/.git/HEAD && \
-    jq ".repository.url = \"${CODIMD_REPOSITORY}\"" /codimd/package.json > /codimd/package.new.json && \
-    mv /codimd/package.new.json /codimd/package.json && \
+    mkdir /hedgedoc/.git && \
+    mv /tmp/gitref /hedgedoc/.git/HEAD && \
+    jq ".repository.url = \"${HEDGEDOC_REPOSITORY}\"" /hedgedoc/package.json > /hedgedoc/package.new.json && \
+    mv /hedgedoc/package.new.json /hedgedoc/package.json && \
     \
     # Symlink configuration files
-    rm -f /codimd/config.json && \
-    ln -s /files/config.json /codimd/config.json && \
-    rm -f /codimd/.sequelizerc && \
-    ln -s /files/.sequelizerc /codimd/.sequelizerc && \
+    rm -f /hedgedoc/config.json && \
+    ln -s /files/config.json /hedgedoc/config.json && \
+    rm -f /hedgedoc/.sequelizerc && \
+    ln -s /files/.sequelizerc /hedgedoc/.sequelizerc && \
     \
     # Install NPM dependencies and build project
     yarn install --pure-lockfile && \
@@ -66,11 +70,11 @@ RUN export dev_apt=( \
     yarn cache clean && \
     apt-get autoremove --purge -qy "${dev_apt[@]}" && \
     rm -r /var/lib/apt/lists/* && \
-    # Create codimd user
-    adduser --uid $UID --home /codimd/ --disabled-password --system codimd && \
-    chown -R codimd /codimd/
+    # Create hedgedoc user
+    adduser --uid $UID --home /hedgedoc/ --disabled-password --system hedgedoc && \
+    chown -R hedgedoc /hedgedoc/
 
-WORKDIR /codimd
+WORKDIR /hedgedoc
 EXPOSE 3000
 
 COPY ["resources/docker-entrypoint.sh", "/usr/local/bin/docker-entrypoint.sh"]
