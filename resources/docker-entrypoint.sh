@@ -19,7 +19,7 @@ if [ -f "$DOCKER_SECRET_DB_URL_FILE_PATH" ]; then
 fi
 
 if [ "$CMD_DB_URL" = "" ]; then
-    CMD_DB_URL="postgres://hackmd:hackmdpass@hackmdPostgres:5432/hackmd"
+    CMD_DB_URL="postgres://hackmd:hackmdpass@database:5432/hackmd"
 fi
 
 export CMD_DB_URL

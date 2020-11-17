@@ -1,0 +1,24 @@
+name: Run tests
+on:
+  pull_request:
+    branches: '**'
+  push:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        base: [debian, alpine]
+    env:
+      BASE: ${{ matrix.base }} # needed in tests/version.sh
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build ${{ matrix.base }} image
+        run: docker build -f ${{ matrix.base }}/Dockerfile -t hedgedoc .
+      - run: docker network create postgres
+      - run: docker run --name postgres --network postgres -e POSTGRES_USER=hedgedoc -e POSTGRES_PASSWORD=password -e POSTGRES_DB=hedgedoc --net-alias database -d postgres:13.1
+      - run: ./tests/chore/startContainer.sh
+      - run: ls tests/*.sh | parallel
+      - run: ./tests/chore/stopContainer.sh
