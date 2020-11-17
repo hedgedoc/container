@@ -9,7 +9,6 @@
             "host": "hackmdPostgres",
             "port": "5432",
             "dialect": "postgres"
-        },
-        "imageUploadType": "imgur"
+        }
     }
 }
