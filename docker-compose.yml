@@ -58,8 +58,7 @@ services:
     #memswap_limit: 512mb     # version 2 only
     #read_only: true          # not supported in swarm mode, enable along with tmpfs
     #tmpfs:
-    #  - /tmp:size=512K
-    #  - /codimd/tmp:size=1M
+    #  - /tmp:size=10M
     #  # Make sure you remove this when you use filesystem as upload type
     #  - /codimd/public/uploads:size=10M
     environment:
