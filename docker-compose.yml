@@ -68,6 +68,8 @@ services:
       # - sqlite:///data/sqlite.db (NOT RECOMMENDED)
       # - For details see the official sequelize docs: http://docs.sequelizejs.com/en/v3/
       - CMD_DB_URL=postgres://hackmd:hackmdpass@database:5432/hackmd
+    volumes:
+      - uploads:/codimd/public/uploads
     ports:
       # Ports that are published to the outside.
       # The latter port is the port inside the container. It should always stay on 3000
@@ -91,3 +93,4 @@ networks:
 volumes:
   # Volume for PostgreSQL/MySQL database
   database:
+  uploads:
