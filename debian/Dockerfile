@@ -23,15 +23,13 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 # Add configuraton files
 COPY ["resources/config.json", "resources/.sequelizerc", "/files/"]
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN export dev_apt=( \
-      "bzip2" \
-      "git" \
-      "jq" \
-    ) && \
+RUN export dev_apt="\
+      bzip2 \
+      git \
+      jq" && \
     apt-get update && \
     apt-get install --no-install-recommends -y \
-      "${dev_apt[@]}" \
+      $dev_apt \
       # Add fonts for PDF export
       fonts-noto \
       gosu && \
@@ -64,7 +62,7 @@ RUN export dev_apt=( \
     # Clean up this layer
     yarn install && \
     yarn cache clean && \
-    apt-get autoremove --purge -qy "${dev_apt[@]}" && \
+    apt-get autoremove --purge -qy $dev_apt && \
     rm -r /var/lib/apt/lists/* && \
     # Create codimd user
     adduser --uid $UID --home /codimd/ --disabled-password --system codimd && \
