@@ -1,0 +1,14 @@
+name: Run tests
+on:
+  pull_request:
+    branches: '*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        base: [debian, alpine]
+    steps:
+      - name: Build ${{ matrix.base }} image
+        run: docker build -f ${{ matrix.base }}/Dockerfile .
