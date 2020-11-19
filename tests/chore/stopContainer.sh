@@ -9,7 +9,7 @@ echo "
 # Make sure tests fails if a commend ends without 0
 set -e
 
-DOCKERCONTAINER=$(docker ps -qf name=codimd-testing)
+DOCKERCONTAINER=$(docker ps -qf name=hedgedoc)
 
 docker ps -f id=${DOCKERCONTAINER}
 
