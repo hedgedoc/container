@@ -1,7 +1,8 @@
 # Using version 3 to provide play-with-docker badge
 # You can change to version 2 without breaking.
 #version: '2'
-version: '3'
+version: '3.4'
+# Version 3.4 is needed for the healthcheck
 services:
   database:
     # Don't upgrade PostgreSQL by simply changing the version number
@@ -61,6 +62,13 @@ services:
     #  - /tmp:size=10M
     #  # Make sure you remove this when you use filesystem as upload type
     #  - /codimd/public/uploads:size=10M
+    healthcheck:
+      # details about the health checks: https://docs.docker.com/compose/compose-file/#healthcheck
+      test: wget -nv -t1 --spider 'http://localhost:3000/'
+      interval: 1m            # how often a health check is done
+      timeout: 10s
+      start_period: 60s       # how long to wait with the first health check
+      retries: 3
     environment:
       # DB_URL is formatted like: <databasetype>://<username>:<password>@<hostname>:<port>/<database>
       # Other examples are:
