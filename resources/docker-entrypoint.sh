@@ -2,7 +2,7 @@
 
 # Use gosu if the container started with root privileges
 UID="$(id -u)"
-[ "$UID" -eq 0 ] && GOSU="gosu codimd" || GOSU=""
+[ "$UID" -eq 0 ] && GOSU="gosu hedgedoc" || GOSU=""
 
 if [ "$HMD_DB_URL" != "" ] && [ "$CMD_DB_URL" = "" ]; then
     CMD_DB_URL="$HMD_DB_URL"
@@ -19,7 +19,7 @@ if [ -f "$DOCKER_SECRET_DB_URL_FILE_PATH" ]; then
 fi
 
 if [ "$CMD_DB_URL" = "" ]; then
-    CMD_DB_URL="postgres://hackmd:hackmdpass@database:5432/hackmd"
+    CMD_DB_URL="postgres://hedgedoc:password@database:5432/hedgedoc"
 fi
 
 export CMD_DB_URL
@@ -53,7 +53,7 @@ $GOSU ./node_modules/.bin/sequelize db:migrate
 # Change owner and permission if filesystem backend is used and user has root permissions
 if [ "$UID" -eq 0 ] && [ "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ]; then
     if [ "$UID" -eq 0 ]; then
-        chown -R codimd ./public/uploads
+        chown -R hedgedoc ./public/uploads
         chmod 700 ./public/uploads
     else
         echo "

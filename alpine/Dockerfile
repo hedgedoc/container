@@ -1,16 +1,19 @@
 FROM node:12.19.1-alpine
 
 # Build arguments to change source url, branch or tag
-ARG CODIMD_REPOSITORY=https://github.com/codimd/server.git
+ARG HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git
 ARG VERSION=master
 ARG UID=10000
+
+ARG CODIMD_REPOSITORY
+RUN if [ -n "${CODIMD_REPOSITORY}" ]; then echo "CODIMD_REPOSITORY is deprecated. Please use HEDGEDOC_REPOSITORY instead" && exit 1; fi
 
 # Set some default config variables
 ENV DOCKERIZE_VERSION=v0.6.1
 ENV NODE_ENV=production
 
 # Disable PDF export on alpine
-# PhantomJS is broken on alpine and crashes CodiMD
+# PhantomJS is broken on alpine and crashes HedgeDoc
 ENV CMD_ALLOW_PDF_EXPORT=false
 
 RUN apk add --no-cache --virtual .download \
@@ -35,23 +38,24 @@ RUN apk add --no-cache --virtual .dep \
     apk add --no-cache --no-progress --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ \
       gosu && \
     # Clone the source
-    git clone --depth 1 --branch "$VERSION" "$CODIMD_REPOSITORY" /codimd && \
+    git clone --depth 1 --branch "$VERSION" "$HEDGEDOC_REPOSITORY" /hedgedoc && \
+    ln -s /hedgedoc /codimd && \
     # Print the cloned version and clean up git files
-    cd /codimd && \
+    cd /hedgedoc && \
     git log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1 && echo && \
     git rev-parse HEAD > /tmp/gitref && \
-    rm -rf /codimd/.git && \
+    rm -rf /hedgedoc/.git && \
     # Mime the git repository for fullversion
-    mkdir /codimd/.git && \
-    mv /tmp/gitref /codimd/.git/HEAD && \
-    jq ".repository.url = \"${CODIMD_REPOSITORY}\"" /codimd/package.json > /codimd/package.new.json && \
-    mv /codimd/package.new.json /codimd/package.json && \
+    mkdir /hedgedoc/.git && \
+    mv /tmp/gitref /hedgedoc/.git/HEAD && \
+    jq ".repository.url = \"${HEDGEDOC_REPOSITORY}\"" /hedgedoc/package.json > /hedgedoc/package.new.json && \
+    mv /hedgedoc/package.new.json /hedgedoc/package.json && \
     \
     # Symlink configuration files
-    rm -f /codimd/config.json && \
-    ln -s /files/config.json /codimd/config.json && \
-    rm -f /codimd/.sequelizerc && \
-    ln -s /files/.sequelizerc /codimd/.sequelizerc && \
+    rm -f /hedgedoc/config.json && \
+    ln -s /files/config.json /hedgedoc/config.json && \
+    rm -f /hedgedoc/.sequelizerc && \
+    ln -s /files/.sequelizerc /hedgedoc/.sequelizerc && \
     \
     # Install NPM dependencies and build project
     yarn install --pure-lockfile && \
@@ -64,10 +68,10 @@ RUN apk add --no-cache --virtual .dep \
     yarn cache clean && \
     apk del .dep && \
     \
-    adduser -u $UID -h /codimd/ -D -S codimd && \
-    chown -R codimd /codimd/
+    adduser -u $UID -h /hedgedoc/ -D -S hedgedoc && \
+    chown -R hedgedoc /hedgedoc/
 
-WORKDIR /codimd
+WORKDIR /hedgedoc
 EXPOSE 3000
 
 COPY ["resources/docker-entrypoint.sh", "/usr/local/bin/docker-entrypoint.sh"]
