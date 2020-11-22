@@ -1,78 +1,68 @@
-FROM node:12.20.0-slim@sha256:ec41f523b98f83c962a47fb94ad475a649cdc967d57053b2ade290cd64ecaf1c
+FROM node:12.20.0-slim@sha256:ec41f523b98f83c962a47fb94ad475a649cdc967d57053b2ade290cd64ecaf1c AS base
 
+FROM base AS basebuilder
+RUN apt-get update
+
+FROM basebuilder AS dockerize
+# Download and extract dockerize, used in resources/docker-entrypoint.sh
+ENV DOCKERIZE_VERSION=v0.6.1
+RUN apt-get install --no-install-recommends -y ca-certificates wget
+RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+RUN tar -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+RUN rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
+
+FROM basebuilder AS builder
 # Build arguments to change source url, branch or tag
+ARG CODIMD_REPOSITORY
 ARG HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git
 ARG VERSION=master
-ARG UID=10000
-
-ARG CODIMD_REPOSITORY
 RUN if [ -n "${CODIMD_REPOSITORY}" ]; then echo "CODIMD_REPOSITORY is deprecated. Please use HEDGEDOC_REPOSITORY instead" && exit 1; fi
 
-# Set some default config variables
-ARG DEBIAN_FRONTEND=noninteractive
-ENV DOCKERIZE_VERSION=v0.6.1
+# Clone the source and remove git repository but keep the HEAD file
+RUN apt-get install --no-install-recommends -y git jq ca-certificates
+RUN git clone --depth 1 --branch "$VERSION" "$HEDGEDOC_REPOSITORY" /hedgedoc
+RUN git -C /hedgedoc log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1
+RUN git -C /hedgedoc rev-parse HEAD > /tmp/gitref
+RUN rm -rf /hedgedoc/.git/*
+RUN mv /tmp/gitref /hedgedoc/.git/HEAD
+RUN jq ".repository.url = \"${HEDGEDOC_REPOSITORY}\"" /hedgedoc/package.json > /hedgedoc/package.new.json
+RUN mv /hedgedoc/package.new.json /hedgedoc/package.json
+
+# Install app dependencies and build
+RUN apt-get install --no-install-recommends -y bzip2
+WORKDIR /hedgedoc
+RUN yarn install --production=false --pure-lockfile
+RUN yarn run build
+RUN rm -rf node_modules
+RUN yarn install --production=true --pure-lockfile
+
+
+FROM base
+ARG UID=10000
 ENV NODE_ENV=production
 
 RUN apt-get update && \
-    apt-get install --no-install-recommends -y \
-      ca-certificates \
-      wget && \
+    apt-get install --no-install-recommends -y fonts-noto gosu && \
     rm -r /var/lib/apt/lists/*
 
-RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
-    tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
-    rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+COPY --from=dockerize dockerize /usr/local/bin/
+COPY --chown=$UID --from=builder /hedgedoc /hedgedoc
 
 # Add configuraton files
 COPY ["resources/config.json", "resources/.sequelizerc", "/files/"]
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN export dev_apt=( \
-      "bzip2" \
-      "git" \
-      "jq" \
-    ) && \
-    apt-get update && \
-    apt-get install --no-install-recommends -y \
-      "${dev_apt[@]}" \
-      # Add fonts for PDF export
-      fonts-noto \
-      gosu && \
-    \
-    # Clone the source
-    git clone --depth 1 --branch "$VERSION" "$HEDGEDOC_REPOSITORY" /hedgedoc && \
-    ln -s /hedgedoc /codimd && \
-    # Print the cloned version and clean up git files
-    cd /hedgedoc && \
-    git log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1 && echo && \
-    git rev-parse HEAD > /tmp/gitref && \
-    rm -rf /hedgedoc/.git && \
-    \
-    # Mime the git repository for fullversion
-    mkdir /hedgedoc/.git && \
-    mv /tmp/gitref /hedgedoc/.git/HEAD && \
-    jq ".repository.url = \"${HEDGEDOC_REPOSITORY}\"" /hedgedoc/package.json > /hedgedoc/package.new.json && \
-    mv /hedgedoc/package.new.json /hedgedoc/package.json && \
-    \
-    # Symlink configuration files
-    rm -f /hedgedoc/config.json && \
-    ln -s /files/config.json /hedgedoc/config.json && \
-    rm -f /hedgedoc/.sequelizerc && \
-    ln -s /files/.sequelizerc /hedgedoc/.sequelizerc && \
-    \
-    # Install NPM dependencies and build project
-    yarn install --pure-lockfile && \
-    yarn install --production=false --pure-lockfile && \
-    npm run build && \
-    \
-    # Clean up this layer
-    yarn install && \
-    yarn cache clean && \
-    apt-get autoremove --purge -qy "${dev_apt[@]}" && \
-    rm -r /var/lib/apt/lists/* && \
-    # Create hedgedoc user
-    adduser --uid $UID --home /hedgedoc/ --disabled-password --system hedgedoc && \
-    chown -R hedgedoc /hedgedoc/
+# For backwards compatibility
+RUN ln -s /hedgedoc /codimd
+
+# Symlink configuration files
+RUN rm -f /hedgedoc/config.json
+RUN ln -s /files/config.json /hedgedoc/config.json
+RUN rm -f /hedgedoc/.sequelizerc
+RUN ln -s /files/.sequelizerc /hedgedoc/.sequelizerc
+
+# Create hedgedoc user
+RUN adduser --uid $UID --home /hedgedoc/ --disabled-password --system hedgedoc
 
 WORKDIR /hedgedoc
 EXPOSE 3000
