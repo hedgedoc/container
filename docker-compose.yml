@@ -6,7 +6,7 @@ services:
   database:
     # Don't upgrade PostgreSQL by simply changing the version number
     # You need to migrate the Database to the new PostgreSQL version
-    image: postgres:9.6-alpine
+    image: postgres:9.6-alpine@sha256:c2b558c811efb0c3d917c0915536b8970ad0c56c2af0dde5620f1bd8187c3e87
     #mem_limit: 256mb         # version 2 only
     #memswap_limit: 512mb     # version 2 only
     #read_only: true          # not supported in swarm mode please enable along with tmpfs
@@ -53,7 +53,7 @@ services:
     #  args:
     #    - "VERSION=master"
     #    - "HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git"
-    image: quay.io/hedgedoc/hedgedoc:1.6.0
+    image: quay.io/hedgedoc/hedgedoc:1.6.0@sha256:1bf1dc9463d11fa0e7b7f5a1a4bff3e94f855db93d8a0c062b197454e30f3614
     #mem_limit: 256mb         # version 2 only
     #memswap_limit: 512mb     # version 2 only
     #read_only: true          # not supported in swarm mode, enable along with tmpfs
