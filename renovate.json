@@ -1,6 +1,8 @@
 {
   "extends": [
     "config:base",
-    "docker:pinDigests"
+    "docker:pinDigests",
+    ":gitSignOff",
+    ":automergeDigest"
   ]
 }
