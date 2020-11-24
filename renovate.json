@@ -4,5 +4,11 @@
     "docker:pinDigests",
     ":gitSignOff",
     ":automergeDigest"
+  ],
+  "packageRules": [
+    {
+      "paths": ["+(docker-compose.yml)"],
+      "pinDigests": false
+    }
   ]
 }
