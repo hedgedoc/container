@@ -53,7 +53,7 @@ services:
     #  args:
     #    - "VERSION=master"
     #    - "HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git"
-    image: quay.io/hedgedoc/hedgedoc:1.6.0@sha256:1bf1dc9463d11fa0e7b7f5a1a4bff3e94f855db93d8a0c062b197454e30f3614
+    image: quay.io/hedgedoc/hedgedoc:1.6.0@sha256:12d91b360fbee8173d942c4167a48a4ac1734994e416e2ce190f55c5d0844fcd
     #mem_limit: 256mb         # version 2 only
     #memswap_limit: 512mb     # version 2 only
     #read_only: true          # not supported in swarm mode, enable along with tmpfs
