@@ -1,4 +1,4 @@
-FROM node:12.19.1-slim@sha256:69496565e889a612b11212889558048a68b899a40a35cf034c1737541646ef5c
+FROM node:12.20.0-slim@sha256:ec41f523b98f83c962a47fb94ad475a649cdc967d57053b2ade290cd64ecaf1c
 
 # Build arguments to change source url, branch or tag
 ARG HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git
