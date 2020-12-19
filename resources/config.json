@@ -1,14 +1,1 @@
-{
-    "production": {
-        "urlAddPort": true,
-        "email": true,
-        "db": {
-            "username": "hedgedoc",
-            "password": "hedgedocpass",
-            "database": "hedgedoc",
-            "host": "hedgedocPostgres",
-            "port": "5432",
-            "dialect": "postgres"
-        }
-    }
-}
+{}
