@@ -10,7 +10,7 @@ jobs:
       matrix:
         base: [debian, alpine]
     env:
-      HEDGEDOC_VERSION: 1.7.0-rc2
+      HEDGEDOC_VERSION: 1.7.0
       HEDGEDOC_IMAGE: quay.io/hedgedoc/hedgedoc
     steps:
       - name: Checkout
