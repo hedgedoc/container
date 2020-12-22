@@ -14,6 +14,8 @@ docker pull quay.io/hedgedoc/hedgedoc:1.7.0-debian
 docker pull quay.io/hedgedoc/hedgedoc:1.7.0-alpine
 ```
 
+You can also use the `alpine` or `debian` tag for the latest version.
+
 We recommend using the Debian version for production deployments and Alpine for expert setups.
 
 # Prerequisite
