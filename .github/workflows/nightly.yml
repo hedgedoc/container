@@ -42,4 +42,6 @@ jobs:
             VERSION=${{ env.HEDGEDOC_VERSION }}
           platforms: linux/amd64
           push: true
-          tags: ${{ env.HEDGEDOC_IMAGE }}:${{ env.TODAY }}-${{ matrix.base }}
+          tags: |
+            ${{ env.HEDGEDOC_IMAGE }}:${{ env.TODAY }}-${{ matrix.base }}
+            ${{ env.HEDGEDOC_IMAGE }}:${{ matrix.base }}
