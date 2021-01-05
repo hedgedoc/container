@@ -1,75 +1,65 @@
-FROM node:12.20.0-alpine@sha256:1c5f444d75cc3ed4e3dee50f07aa66eba616c45217d6c8600819e4b245b8215e
+FROM node:12.20.0-alpine@sha256:1c5f444d75cc3ed4e3dee50f07aa66eba616c45217d6c8600819e4b245b8215e AS base
 
+FROM base AS basebuilder
+RUN apk update
+
+FROM basebuilder AS dockerize
+# Download and extract dockerize, used in resources/docker-entrypoint.sh
+ENV DOCKERIZE_VERSION=v0.6.1
+RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+RUN tar -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+RUN rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
+
+FROM basebuilder AS builder
 # Build arguments to change source url, branch or tag
+ARG CODIMD_REPOSITORY
 ARG HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git
 ARG VERSION=master
-ARG UID=10000
-
-ARG CODIMD_REPOSITORY
 RUN if [ -n "${CODIMD_REPOSITORY}" ]; then echo "CODIMD_REPOSITORY is deprecated. Please use HEDGEDOC_REPOSITORY instead" && exit 1; fi
 
-# Set some default config variables
-ENV DOCKERIZE_VERSION=v0.6.1
+# Clone the source and remove git repository but keep the HEAD file
+RUN apk add git jq
+RUN git clone --depth 1 --branch "$VERSION" "$HEDGEDOC_REPOSITORY" /hedgedoc
+RUN git -C /hedgedoc log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1
+RUN git -C /hedgedoc rev-parse HEAD > /tmp/gitref
+RUN rm -rf /hedgedoc/.git/*
+RUN mv /tmp/gitref /hedgedoc/.git/HEAD
+RUN jq ".repository.url = \"${HEDGEDOC_REPOSITORY}\"" /hedgedoc/package.json > /hedgedoc/package.new.json
+RUN mv /hedgedoc/package.new.json /hedgedoc/package.json
+
+# Install app dependencies and build
+WORKDIR /hedgedoc
+RUN yarn install --production=false --pure-lockfile
+RUN yarn run build
+RUN rm -rf node_modules
+RUN yarn install --production=true --pure-lockfile
+
+
+FROM base
+ARG UID=10000
 ENV NODE_ENV=production
 
-# Disable PDF export on alpine
-# PhantomJS is broken on alpine and crashes HedgeDoc
-ENV CMD_ALLOW_PDF_EXPORT=false
-
-RUN apk add --no-cache --virtual .download \
-      ca-certificates \
-      wget && \
-    wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
-    tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
-    rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz && \
-    apk del .download
+COPY --from=dockerize dockerize /usr/local/bin/
+COPY --chown=$UID --from=builder /hedgedoc /hedgedoc
 
 # Add configuraton files
 COPY ["resources/config.json", "resources/.sequelizerc", "/files/"]
 
+# For backwards compatibility
+RUN ln -s /hedgedoc /codimd
+
 # Install all dependencies and build project
-RUN apk add --no-cache --virtual .dep \
-      bash \
-      build-base \
-      git \
-      jq \
-      openssl-dev \
-      python && \
-    apk add --no-cache --no-progress --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ \
-      gosu && \
-    # Clone the source
-    git clone --depth 1 --branch "$VERSION" "$HEDGEDOC_REPOSITORY" /hedgedoc && \
-    ln -s /hedgedoc /codimd && \
-    # Print the cloned version and clean up git files
-    cd /hedgedoc && \
-    git log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1 && echo && \
-    git rev-parse HEAD > /tmp/gitref && \
-    rm -rf /hedgedoc/.git && \
-    # Mime the git repository for fullversion
-    mkdir /hedgedoc/.git && \
-    mv /tmp/gitref /hedgedoc/.git/HEAD && \
-    jq ".repository.url = \"${HEDGEDOC_REPOSITORY}\"" /hedgedoc/package.json > /hedgedoc/package.new.json && \
-    mv /hedgedoc/package.new.json /hedgedoc/package.json && \
-    \
-    # Symlink configuration files
-    rm -f /hedgedoc/config.json && \
-    ln -s /files/config.json /hedgedoc/config.json && \
-    rm -f /hedgedoc/.sequelizerc && \
-    ln -s /files/.sequelizerc /hedgedoc/.sequelizerc && \
-    \
-    # Install NPM dependencies and build project
-    yarn install --pure-lockfile && \
-    yarn install --production=false --pure-lockfile && \
-    #yarn global add webpack && \
-    npm run build && \
-    \
-    # Clean up this layer
-    yarn install && \
-    yarn cache clean && \
-    apk del .dep && \
-    \
-    adduser -u $UID -h /hedgedoc/ -D -S hedgedoc && \
-    chown -R hedgedoc /hedgedoc/
+RUN apk add --no-cache --no-progress --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ gosu
+
+# Symlink configuration files
+RUN rm -f /hedgedoc/config.json
+RUN ln -s /files/config.json /hedgedoc/config.json
+RUN rm -f /hedgedoc/.sequelizerc
+RUN ln -s /files/.sequelizerc /hedgedoc/.sequelizerc
+
+# Create hedgedoc user
+RUN adduser -u $UID -h /hedgedoc/ -D -S hedgedoc
 
 WORKDIR /hedgedoc
 EXPOSE 3000
