@@ -10,8 +10,8 @@ HedgeDoc docker images are available in two flavors: Debian and Alpine. These ar
 <https://quay.io/repository/hedgedoc/hedgedoc>
 
 ```
-docker pull quay.io/hedgedoc/hedgedoc:1.7.1-debian
-docker pull quay.io/hedgedoc/hedgedoc:1.7.1-alpine
+docker pull quay.io/hedgedoc/hedgedoc:1.7.2-debian
+docker pull quay.io/hedgedoc/hedgedoc:1.7.2-alpine
 ```
 
 We recommend using the Debian version for production deployments and Alpine for expert setups.
