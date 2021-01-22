@@ -48,6 +48,21 @@ docker-compose pull ## pull new containers
 docker-compose up ## turn on
 ```
 
+
+### Migrate from 1.6
+
+Together with the update to HedgeDoc 1.7, the database user name, password and database name have been changed in `docker-compose.yml`.
+
+In order to migrate the existing database to the new default credentials, run
+
+```bash
+docker-compose exec database createuser --superuser -Uhackmd postgres
+docker-compose exec database psql -Upostgres -c "alter role hackmd rename to hedgedoc; alter role hedgedoc with password 'password'; alter database hackmd rename to hedgedoc;"
+```
+
+before running `docker-compose up`.
+
+
 ### Migrate from docker-hackmd
 
 If you used the [`docker-hackmd`](https://github.com/hackmdio/docker-hackmd) repository before, migrating to [`hedgedoc-container`](https://github.com/hedgedoc/container) is easy.
