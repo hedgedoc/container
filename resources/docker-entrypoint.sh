@@ -18,7 +18,28 @@ if [ -f "$DOCKER_SECRET_DB_URL_FILE_PATH" ]; then
     CMD_DB_URL="$(cat $DOCKER_SECRET_DB_URL_FILE_PATH)"
 fi
 
-if [ "$CMD_DB_URL" = "" ]; then
+# configuration depends on choosen dialect
+#
+# see https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor
+#
+if [ -n "${CMD_DB_DIALECT}" ]; then
+    if [ -z "${CMD_DB_HOST}" ]; then
+        CMD_DB_HOST="database"
+    fi
+    if [ -z "${CMD_DB_PORT}" ]; then
+        CMD_DB_PORT="5432"
+    fi
+    if [ -z "${CMD_DB_DATABASE}" ]; then
+        CMD_DB_DATABASE="hedgedoc"
+    fi
+    if [ -z "${CMD_DB_USERNAME}" ]; then
+        CMD_DB_USERNAME="hedgedoc"
+    fi
+    if [ -z "${CMD_DB_PASSWORD}" ]; then
+        CMD_DB_PASSWORD="password"
+    fi
+    CMD_DB_URL="${CMD_DB_DIALECT}://${CMD_DB_USERNAME}:${CMD_DB_PASSWORD}@${CMD_DB_HOST}:${CMD_DB_PORT}/${CMD_DB_DATABASE}"
+elif [ "$CMD_DB_URL" = "" ]; then
     CMD_DB_URL="postgres://hedgedoc:password@database:5432/hedgedoc"
 fi
 
