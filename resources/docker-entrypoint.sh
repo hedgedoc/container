@@ -27,6 +27,15 @@ export CMD_DB_URL
 DB_SOCKET=$(echo ${CMD_DB_URL} | sed -e 's/.*:\/\//\/\//' -e 's/.*\/\/[^@]*@//' -e 's/\/.*$//')
 
 if [ "$DB_SOCKET" != "" ]; then
+
+    if [ -n "${DB_SOCKET##*:*}" ]; then
+        if [ -z "${CMD_DB_URL##postgres:*}" ]; then
+            DB_SOCKET=$DB_SOCKET:5432
+        elif [ -z "${CMD_DB_URL##mysql:*}" ]; then
+            DB_SOCKET=$DB_SOCKET:3306
+        fi
+    fi
+
     dockerize -wait "tcp://${DB_SOCKET}" -timeout 30s
 fi
 
