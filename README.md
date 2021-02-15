@@ -49,6 +49,11 @@ docker-compose up ## turn on
 ```
 
 
+### Configuration
+
+You can configure your container with a config file or with env vars. Check out https://docs.hedgedoc.org/configuration/ for more details.
+
+
 ### Migrate from 1.6
 
 Together with the update to HedgeDoc 1.7, the database user name, password and database name have been changed in `docker-compose.yml`.
