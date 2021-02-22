@@ -70,16 +70,21 @@ before running `docker-compose up`.
 
 ### Migrate from docker-hackmd
 
-If you used the [`docker-hackmd`](https://github.com/hackmdio/docker-hackmd) repository before, migrating to [`hedgedoc-container`](https://github.com/hedgedoc/container) is easy.
+If you used the [`docker-hackmd`](https://github.com/hackmdio/docker-hackmd) repository before, you can migrate to [`hedgedoc-container`](https://github.com/hedgedoc/container).
 
-Since `hedgedoc-container` is basically a fork of `docker-hackmd`, all you need to do is replace the upstream URL:
+`hedgedoc-container` is fork of `docker-hackmd`, so you need to replace the upstream URL:
 
 ```bash
 git remote set-url origin https://github.com/hedgedoc/container.git
 git pull
 ```
 
-Now you can follow the regular update steps.
+Since both codebases diverged since the fork, we recommend that you read the
+[HedgeDoc release notes](https://github.com/hedgedoc/hedgedoc/releases) at
+least since 1.6.0 and follow any instructions present there. A particular issue
+that has come up is when handling TLS connections when using a reverse proxy.
+You must [set the `X-Forwarded-Proto` header
+correctly](https://docs.hedgedoc.org/guides/reverse-proxy/).
 
 
 ## Backup
