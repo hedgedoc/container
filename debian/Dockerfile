@@ -1,4 +1,4 @@
-FROM node:12.21.0-slim@sha256:718e6d699295749b3bf1e3782821069ab279e37e5d8ddf163aa566a8645891af AS base
+FROM node:12.22.1-slim@sha256:5779929b7bc9952dd592971eb57aa38cb2d0f70709e909a11f2021c812d8e917 AS base
 
 FROM base AS basebuilder
 RUN apt-get update
