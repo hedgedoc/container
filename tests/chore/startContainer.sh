@@ -17,3 +17,5 @@ PORT=$(( $(shuf -e $(seq 0 9999) | head -n1) + 10000 ))
 
 # Run container in a simple way
 docker ps -f id=$(docker run -d --name hedgedoc --network postgres -p 127.0.0.1:${PORT}:3000 -e "CMD_DB_URL=postgres://hedgedoc:password@database:5432/hedgedoc" hedgedoc)
+
+sleep 30
