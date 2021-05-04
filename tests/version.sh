@@ -14,7 +14,7 @@ fi
 
 # Check for command existence
 # See: https://www.shivering-isles.com/helpful-shell-snippets-for-docker-testing-and-bootstrapping/
-command_exits() { command -v $1 >/dev/null 2>&1 || { echo >&2 "I require $1 but it's not installed.  Aborting."; exit 1; }; }
+command_exists() { command -v $1 >/dev/null 2>&1 || { echo >&2 "I require $1 but it's not installed.  Aborting."; exit 1; }; }
 
 # Docker latest version tag
 # See: https://www.shivering-isles.com/helpful-shell-snippets-for-docker-testing-and-bootstrapping/
@@ -32,7 +32,7 @@ docker_base_version() { cat "$1" | grep FROM | sed -e "s/FROM.*://g"; }
 # See: https://www.shivering-isles.com/helpful-shell-snippets-for-docker-testing-and-bootstrapping/
 docker_base_name() { cat "$1" | grep FROM | sed -e "s/FROM[^[:alpha:]]//g" -e "s/:.*//g"; }
 
-command_exits wget
+command_exists wget
 
 LATEST=$(docker_image_latest_tag `docker_base_name "$DOCKERFILE"`)
 CURRENT=$(docker_base_version "$DOCKERFILE")
