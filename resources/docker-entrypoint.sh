@@ -30,8 +30,6 @@ if [ "$DB_SOCKET" != "" ]; then
     dockerize -wait "tcp://${DB_SOCKET}" -timeout 30s
 fi
 
-$GOSU ./node_modules/.bin/sequelize db:migrate
-
 # Print warning if local data storage is used but no volume is mounted
 [ "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ] && { mountpoint -q ./public/uploads || {
     echo "

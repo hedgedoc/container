@@ -50,7 +50,7 @@ COPY --from=dockerize dockerize /usr/local/bin/
 COPY --chown=$UID --from=builder /hedgedoc /hedgedoc
 
 # Add configuraton files
-COPY ["resources/config.json", "resources/.sequelizerc", "/files/"]
+COPY ["resources/config.json", "/files/"]
 
 # For backwards compatibility
 RUN ln -s /hedgedoc /codimd
@@ -58,8 +58,6 @@ RUN ln -s /hedgedoc /codimd
 # Symlink configuration files
 RUN rm -f /hedgedoc/config.json
 RUN ln -s /files/config.json /hedgedoc/config.json
-RUN rm -f /hedgedoc/.sequelizerc
-RUN ln -s /files/.sequelizerc /hedgedoc/.sequelizerc
 
 # Create hedgedoc user
 RUN adduser --uid $UID --home /hedgedoc/ --disabled-password --system hedgedoc
