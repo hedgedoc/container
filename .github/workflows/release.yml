@@ -10,6 +10,7 @@ jobs:
       matrix:
         base: [debian, alpine]
     env:
+      # renovate: datasource=github-tags depName=hedgedoc/hedgedoc versioning=semver
       HEDGEDOC_VERSION: 1.8.2
       HEDGEDOC_IMAGE: quay.io/hedgedoc/hedgedoc
     steps:
