@@ -1,4 +1,4 @@
-FROM node:16.3.0-slim@sha256:f0ce392b4630c760f3e129ee7b1bb2b199e32413a394296ae64c4ce1d47adb07 AS base
+FROM node:16.3.0-slim@sha256:8a4a41e7c11e5f290cedad1ff6ced2f97f1683132fa7f24de2faf83c08e9f84b AS base
 
 FROM base AS basebuilder
 RUN apt-get update
