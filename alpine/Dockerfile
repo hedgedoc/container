@@ -39,6 +39,7 @@ RUN yarn install --production=true --pure-lockfile
 FROM base
 ARG UID=10000
 ENV NODE_ENV=production
+ENV UPLOADS_MODE=0700
 
 COPY --from=dockerize dockerize /usr/local/bin/
 COPY --chown=$UID --from=builder /hedgedoc /hedgedoc

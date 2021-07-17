@@ -41,6 +41,7 @@ RUN yarn install --production=true --pure-lockfile
 FROM base
 ARG UID=10000
 ENV NODE_ENV=production
+ENV UPLOADS_MODE=0700
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y fonts-noto gosu && \
