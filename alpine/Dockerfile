@@ -1,4 +1,4 @@
-FROM node:16.6.0-alpine@sha256:47af330a6d6dcb706a3fadf3ecebe50f73064831991f9a4c5f21a46cfc6d97d7 AS base
+FROM node:16.6.0-alpine@sha256:36e01fc96f93d48cc31a6cf44d6d2fbd35808b219269740f4c544896d5536c2e AS base
 
 FROM base AS basebuilder
 RUN apk update
