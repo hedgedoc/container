@@ -5,135 +5,24 @@ HedgeDoc container
 [![#hedgedoc on matrix.org](https://img.shields.io/badge/Matrix.org-%23hedgedoc@matrix.org-green.svg)](https://chat.hedgedoc.org)
 [![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://github.com/hedgedoc/container/raw/master/docker-compose.yml&stack_name=hedgedoc)
 
-HedgeDoc docker images are available in two flavors: Debian and Alpine. These are available at quay.io:
+This repository contains resources for building the official HedgeDoc containers published to quay.io.
 
-<https://quay.io/repository/hedgedoc/hedgedoc>
+## Getting Started
 
-```
-docker pull quay.io/hedgedoc/hedgedoc:1.8.2-debian
-docker pull quay.io/hedgedoc/hedgedoc:1.8.2-alpine
-```
+Have a look at our [getting started guide](https://docs.hedgedoc.org/setup/getting-started/) and follow the instructions 
+for Docker.
 
-We recommend using the Debian version for production deployments and Alpine for expert setups.
+# Documentation
 
-# Prerequisite
+The official docs can be found at https://docs.hedgedoc.org/setup/docker/.
 
-* git (https://git-scm.com/)
-* docker (https://www.docker.com/community-edition)
-* docker-compose (https://docs.docker.com/compose/install/)
-
-See more here: https://docs.docker.com/
-
-
-# Usage
-
-## Get started
-
-1. Install docker and docker-compose, "Docker for Windows" or "Docker for Mac"
-2. Run `git clone https://github.com/hedgedoc/container.git hedgedoc-container`
-3. Change to the directory `hedgedoc-container` directory
-4. Run `docker-compose up` in your terminal
-5. Wait until see the log `HTTP Server listening at port 3000`, it will take few minutes based on your internet connection.
-6. Open http://127.0.0.1:3000
-
-
-## Update
-
-Start your docker and enter the terminal, follow below commands:
-
-```bash
-cd hedgedoc-container ## enter the directory
-git pull ## pull new commits
-docker-compose pull ## pull new containers
-docker-compose up ## turn on
-```
-
-
-### Configuration
-
-You can configure your container with a config file or with env vars. Check out https://docs.hedgedoc.org/configuration/ for more details.
-
-
-### Migrate from 1.6
-
-Together with the update to HedgeDoc 1.7, the database user name, password and database name have been changed in `docker-compose.yml`.
-
-In order to migrate the existing database to the new default credentials, run
-
-```bash
-docker-compose exec database createuser --superuser -Uhackmd postgres
-docker-compose exec database psql -Upostgres -c "alter role hackmd rename to hedgedoc; alter role hedgedoc with password 'password'; alter database hackmd rename to hedgedoc;"
-```
-
-before running `docker-compose up`.
-
-
-### Migrate from docker-hackmd
-
-If you used the [`docker-hackmd`](https://github.com/hackmdio/docker-hackmd) repository before, you can migrate to [`hedgedoc-container`](https://github.com/hedgedoc/container).
-
-`hedgedoc-container` is fork of `docker-hackmd`, so you need to replace the upstream URL:
-
-```bash
-git remote set-url origin https://github.com/hedgedoc/container.git
-git pull
-```
-
-Since both codebases diverged since the fork, we recommend that you read the
-[HedgeDoc release notes](https://github.com/hedgedoc/hedgedoc/releases) at
-least since 1.6.0 and follow any instructions present there. A particular issue
-that has come up is when handling TLS connections when using a reverse proxy.
-You must [set the `X-Forwarded-Proto` header
-correctly](https://docs.hedgedoc.org/guides/reverse-proxy/).
-
-
-## Backup
-
-Start your docker and enter the terminal, follow below commands:
-
-```bash
- docker-compose exec database pg_dump hedgedoc -U hedgedoc > backup.sql
-```
-
-
-## Restore
-
-Before starting the application for the first time, run these commands:
-
-```bash
-docker-compose up -d database
-cat backup.sql | docker exec -i $(docker-compose ps -q database) psql -U hedgedoc
-```
-
-# Custom build
-
-The default setting is to use pre-built docker images. If you want to build your
-own containers uncomment the `build` section in the
-[`docker-compose.yml`](https://github.com/hedgedoc/container/blob/master/docker-compose.yml)
-and edit the
-[`config.json`](https://github.com/hedgedoc/container/blob/master/resources/config.json).
-
-If you change the database settings and don't use the `CMD_DB_URL` make sure
-you edit the
-[`.sequelizerc`](https://github.com/hedgedoc/container/blob/master/resources/.sequelizerc).
-
+They are maintained in the [main HedgeDoc repository](https://github.com/hedgedoc/hedgedoc/blob/master/docs/content/setup/docker.md),
+so PRs must be filed over there.
 
 # License
 
 View [license information](https://github.com/hedgedoc/hedgedoc) for the
 software contained in this image.
-
-
-# Supported Docker versions
-
-This image is officially supported on Docker version 17.03.1-CE.
-
-Support for older versions (down to 1.12) is provided on a best-effort basis.
-
-Please see [the Docker installation
-documentation](https://docs.docker.com/installation/) for details on how to
-upgrade your Docker daemon.
-
 
 # User Feedback
 
