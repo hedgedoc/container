@@ -21,7 +21,6 @@ RUN mv /hedgedoc/package.new.json /hedgedoc/package.json
 WORKDIR /hedgedoc
 RUN yarn install --production=false --pure-lockfile
 RUN yarn run build
-RUN rm -rf node_modules
 RUN yarn install --production=true --pure-lockfile
 
 
