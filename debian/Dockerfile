@@ -1,10 +1,6 @@
 FROM node:16.9.0-slim@sha256:fca208cb6a90179412cc78ac590a81c3b802b2d3a66b202e31586a9b702e101c AS base
 
-FROM base AS basebuilder
-RUN apt-get update
-
-
-FROM basebuilder AS builder
+FROM base AS builder
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY
 ARG HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git
@@ -12,7 +8,7 @@ ARG VERSION=master
 RUN if [ -n "${CODIMD_REPOSITORY}" ]; then echo "CODIMD_REPOSITORY is deprecated. Please use HEDGEDOC_REPOSITORY instead" && exit 1; fi
 
 # Clone the source and remove git repository but keep the HEAD file
-RUN apt-get install --no-install-recommends -y git jq ca-certificates
+RUN apt-get update && apt-get install --no-install-recommends -y git jq ca-certificates
 RUN git clone --depth 1 --branch "$VERSION" "$HEDGEDOC_REPOSITORY" /hedgedoc
 RUN git -C /hedgedoc log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1
 RUN git -C /hedgedoc rev-parse HEAD > /tmp/gitref

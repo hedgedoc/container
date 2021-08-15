@@ -1,10 +1,6 @@
 FROM node:16.9.0-alpine@sha256:697313d55634a94b36cc5cf75a687b210c7e4a8e433e64d80893bcfca9b11de8 AS base
 
-FROM base AS basebuilder
-RUN apk update
-
-
-FROM basebuilder AS builder
+FROM base AS builder
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY
 ARG HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git
@@ -12,7 +8,7 @@ ARG VERSION=master
 RUN if [ -n "${CODIMD_REPOSITORY}" ]; then echo "CODIMD_REPOSITORY is deprecated. Please use HEDGEDOC_REPOSITORY instead" && exit 1; fi
 
 # Clone the source and remove git repository but keep the HEAD file
-RUN apk add git jq
+RUN apk update && apk add git jq
 RUN git clone --depth 1 --branch "$VERSION" "$HEDGEDOC_REPOSITORY" /hedgedoc
 RUN git -C /hedgedoc log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1
 RUN git -C /hedgedoc rev-parse HEAD > /tmp/gitref
