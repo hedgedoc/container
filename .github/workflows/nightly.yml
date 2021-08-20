@@ -35,7 +35,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push image
-        uses: docker/build-push-action@1bc1040caef9e604eb543693ba89b5bf4fc80935 # renovate: tag=v2
+        uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229 # renovate: tag=v2
         with:
           context: .
           file: ./${{ matrix.base }}/Dockerfile
