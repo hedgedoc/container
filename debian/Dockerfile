@@ -30,7 +30,7 @@ ARG UID=10000
 ENV NODE_ENV=production
 
 RUN apt-get update && \
-    apt-get install --no-install-recommends -y fonts-noto gosu && \
+    apt-get install --no-install-recommends -y gosu && \
     rm -r /var/lib/apt/lists/*
 
 COPY --chown=$UID --from=builder /hedgedoc /hedgedoc
