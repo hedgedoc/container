@@ -59,4 +59,4 @@ COPY ["resources/docker-entrypoint.sh", "/usr/local/bin/docker-entrypoint.sh"]
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
-CMD ["npm", "start"]
+CMD ["node", "app.js"]
