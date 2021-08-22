@@ -18,7 +18,6 @@ RUN jq ".repository.url = \"${HEDGEDOC_REPOSITORY}\"" /hedgedoc/package.json > /
 RUN mv /hedgedoc/package.new.json /hedgedoc/package.json
 
 # Install app dependencies and build
-RUN apt-get install --no-install-recommends -y bzip2
 WORKDIR /hedgedoc
 RUN yarn install --production=false --pure-lockfile
 RUN yarn run build
