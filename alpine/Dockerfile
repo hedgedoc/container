@@ -28,6 +28,9 @@ FROM base
 ARG UID=10000
 ENV NODE_ENV=production
 
+# Create hedgedoc user
+RUN adduser -u $UID -h /hedgedoc/ -D -S hedgedoc
+
 COPY --chown=$UID --from=builder /hedgedoc /hedgedoc
 
 # Add configuraton files
@@ -46,9 +49,6 @@ RUN apk add --no-cache --no-progress --repository http://dl-cdn.alpinelinux.org/
 # Symlink configuration files
 RUN rm -f /hedgedoc/config.json
 RUN ln -s /files/config.json /hedgedoc/config.json
-
-# Create hedgedoc user
-RUN adduser -u $UID -h /hedgedoc/ -D -S hedgedoc
 
 WORKDIR /hedgedoc
 EXPOSE 3000

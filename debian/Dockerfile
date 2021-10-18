@@ -32,6 +32,9 @@ RUN apt-get update && \
     apt-get install --no-install-recommends -y gosu && \
     rm -r /var/lib/apt/lists/*
 
+# Create hedgedoc user
+RUN adduser --uid $UID --home /hedgedoc/ --disabled-password --system hedgedoc
+
 COPY --chown=$UID --from=builder /hedgedoc /hedgedoc
 
 # Add configuraton files
@@ -47,9 +50,6 @@ RUN ln -s /hedgedoc /codimd
 # Symlink configuration files
 RUN rm -f /hedgedoc/config.json
 RUN ln -s /files/config.json /hedgedoc/config.json
-
-# Create hedgedoc user
-RUN adduser --uid $UID --home /hedgedoc/ --disabled-password --system hedgedoc
 
 WORKDIR /hedgedoc
 EXPOSE 3000
