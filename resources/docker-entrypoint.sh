@@ -29,8 +29,10 @@ fi
 # Change owner and permission if filesystem backend is used and user has root permissions
 if [ "$UID" -eq 0 ] && [ "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ]; then
     if [ "$UID" -eq 0 ]; then
+        echo "Updating uploads directory permissions ($UPLOADS_MODE)"
         chown -R hedgedoc ./public/uploads
         chmod $UPLOADS_MODE ./public/uploads
+        find ./public/uploads -type f -executable -exec chmod a-x {} \;
     else
         echo "
             #################################################################
