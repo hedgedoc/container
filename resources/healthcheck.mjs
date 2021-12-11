@@ -5,7 +5,7 @@ setTimeout(() => {
     process.exit(1)
 }, 5000)
 
-fetch(`http://localhost:${process.env.CMD_PORT || '3000' }/status`).then((response) => {
+fetch(`http://localhost:${process.env.CMD_PORT || '3000' }/status`, {headers: { "user-agent": "hedgedoc-container-healthcheck/1.0"}}).then((response) => {
     if (!response.ok) {
         process.exit(1)
     }
