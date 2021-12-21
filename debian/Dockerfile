@@ -1,4 +1,4 @@
-FROM node:16.13.1-slim@sha256:41a52a395041abb700503b34b4ecf463fad4f0ef673d5343222a9591f1497047 AS base
+FROM node:16.13.1-slim@sha256:b72e0642d8fc6a27a9e7593ed35848168ffcd6674243881be627439fd225b74d AS base
 
 FROM base AS builder
 # Build arguments to change source url, branch or tag
