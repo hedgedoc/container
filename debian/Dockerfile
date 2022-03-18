@@ -1,4 +1,4 @@
-FROM node:16.14.0-slim@sha256:3f34fa94510e16bf619fefb53c9c5d2b11ead626863bdb6b26b49d38d1b56db8 AS base
+FROM node:16.14.0-bullseye-slim@sha256:1783532751c7b2b7d2b63a65a458fd5123e9a095ea2ad924c7f3da268d576380 AS base
 
 FROM base AS builder
 # Build arguments to change source url, branch or tag
@@ -8,7 +8,7 @@ ARG VERSION=master
 RUN if [ -n "${CODIMD_REPOSITORY}" ]; then echo "CODIMD_REPOSITORY is deprecated. Please use HEDGEDOC_REPOSITORY instead" && exit 1; fi
 
 # Clone the source and remove git repository but keep the HEAD file
-RUN apt-get update && apt-get install --no-install-recommends -y git jq ca-certificates
+RUN apt-get update && apt-get install --no-install-recommends -y git jq ca-certificates python-is-python3 build-essential
 RUN git clone --depth 1 --branch "$VERSION" "$HEDGEDOC_REPOSITORY" /hedgedoc
 RUN git -C /hedgedoc log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1
 RUN git -C /hedgedoc rev-parse HEAD > /tmp/gitref
