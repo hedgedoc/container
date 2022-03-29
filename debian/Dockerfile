@@ -1,4 +1,4 @@
-FROM node:16.14.2-bullseye-slim@sha256:7d95bfe09e2244aa56ce7d836ac6f45ed6df2e2c270e1c087033d9acab83f660 AS base
+FROM node:16.14.2-bullseye-slim@sha256:f2b8b11f59de818d6029c3fd277aef016b3a015eb1613e3d292c41711a984a41 AS base
 
 FROM base AS builder
 # Build arguments to change source url, branch or tag
