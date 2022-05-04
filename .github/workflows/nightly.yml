@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        base: [debian, alpine]
+        base: [debian, alpine, distroless]
     env:
       HEDGEDOC_VERSION: master
       HEDGEDOC_IMAGE: quay.io/hedgedoc/hedgedoc-nightly
