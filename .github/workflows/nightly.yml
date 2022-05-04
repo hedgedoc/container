@@ -42,7 +42,7 @@ jobs:
           labels: quay.expires-after=1w
           build-args: |
             VERSION=${{ env.HEDGEDOC_VERSION }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ${{ env.HEDGEDOC_IMAGE }}:${{ env.TODAY }}-${{ matrix.base }}
