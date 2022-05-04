@@ -8,6 +8,9 @@ on:
 jobs:
   nightly:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     strategy:
       matrix:
         base: [debian, alpine]
@@ -17,6 +20,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@main
+        with:
+          cosign-release: 'v1.8.0'
 
       - name: Set date
         run: echo TODAY=$(date +%Y%m%d) >> $GITHUB_ENV
@@ -35,6 +43,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push image
+        id: build-push
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a # tag=v2
         with:
           context: .
@@ -47,3 +56,9 @@ jobs:
           tags: |
             ${{ env.HEDGEDOC_IMAGE }}:${{ env.TODAY }}-${{ matrix.base }}
             ${{ env.HEDGEDOC_IMAGE }}:${{ matrix.base }}
+
+      - name: Sign the images with GitHub OIDC Token
+        run: cosign sign ${IMAGE}
+        env:
+          IMAGE: ${{ env.HEDGEDOC_IMAGE }}@${{ steps.build-push.outputs.digest }}
+          COSIGN_EXPERIMENTAL: 1
