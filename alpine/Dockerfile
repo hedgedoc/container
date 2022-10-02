@@ -1,4 +1,4 @@
-FROM node:16.17.0-alpine@sha256:2c405ed42fc0fd6aacbe5730042640450e5ec030bada7617beac88f742b6997b AS base
+FROM node:16.17.1-alpine@sha256:88d9d8da697877a4a771a40e5cbc10a12c2ad959e82f3b0f36ef35635e17f693 AS base
 
 FROM base AS builder
 # Build arguments to change source url, branch or tag
