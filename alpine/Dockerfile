@@ -1,4 +1,4 @@
-FROM node:16.18.1-alpine@sha256:15dd66f723aab8b367abc7ac6ed25594ca4653f2ce49ad1505bfbe740ad5190e AS base
+FROM node:16.19.0-alpine@sha256:1621ddffc775ccf10dc8710660e70d5bfb8e4ee349b926f133698e6512144b73 AS base
 
 FROM base AS builder
 # Build arguments to change source url, branch or tag
@@ -9,7 +9,6 @@ RUN if [ -n "${CODIMD_REPOSITORY}" ]; then echo "CODIMD_REPOSITORY is deprecated
 
 # Clone the source and remove git repository but keep the HEAD file
 RUN apk update && apk add git jq python3 build-base
-RUN ln -s /usr/bin/python3 /usr/bin/python # sqlite3 build scripts want a 'python' binary
 RUN git clone --depth 1 --branch "$VERSION" "$HEDGEDOC_REPOSITORY" /hedgedoc
 RUN git -C /hedgedoc log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1
 RUN git -C /hedgedoc rev-parse HEAD > /tmp/gitref
