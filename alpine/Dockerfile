@@ -9,7 +9,6 @@ RUN if [ -n "${CODIMD_REPOSITORY}" ]; then echo "CODIMD_REPOSITORY is deprecated
 
 # Clone the source and remove git repository but keep the HEAD file
 RUN apk update && apk add git jq python3 build-base
-RUN ln -s /usr/bin/python3 /usr/bin/python # sqlite3 build scripts want a 'python' binary
 RUN git clone --depth 1 --branch "$VERSION" "$HEDGEDOC_REPOSITORY" /hedgedoc
 RUN git -C /hedgedoc log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1
 RUN git -C /hedgedoc rev-parse HEAD > /tmp/gitref
