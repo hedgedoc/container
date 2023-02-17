@@ -19,9 +19,9 @@ RUN mv /hedgedoc/package.new.json /hedgedoc/package.json
 
 # Install app dependencies and build
 WORKDIR /hedgedoc
-RUN yarn install --production=false --pure-lockfile
+RUN yarn install --production=false --pure-lockfile --network-timeout 1000000
 RUN yarn run build
-RUN yarn install --production=true --pure-lockfile
+RUN yarn install --production=true --pure-lockfile --network-timeout 1000000
 
 
 FROM base
