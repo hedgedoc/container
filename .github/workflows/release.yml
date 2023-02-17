@@ -2,6 +2,7 @@ name: Container release
 on:
   push:
     branches: [main, master]
+  workflow_dispatch:
 
 jobs:
   release:
@@ -44,6 +45,6 @@ jobs:
           file: ./${{ matrix.base }}/Dockerfile
           build-args: |
             VERSION=${{ env.HEDGEDOC_VERSION }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
           tags: ${{ env.TAGS }}
