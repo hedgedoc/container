@@ -51,6 +51,16 @@ if [ "$UID" -eq 0 ] && [ "$CMD_IMAGE_UPLOAD_TYPE" = "filesystem" ]; then
     fi
 fi
 
+#Add support for the _FILE Environment Variable Postfix
+FILE_ENV_VARS=$(printenv | grep "CMD_.*_FILE=.")
+for ENV_VAR in $FILE_ENV_VARS
+do
+    NEW_ENV_VAR=$(echo "$ENV_VAR" | grep -oE "(.+)=" | sed 's/_FILE=$//')
+    ENV_FILE_VAR_PATH=$(echo "$ENV_VAR" | grep -oE '=(.+)' | sed 's/^=//')
+    ENV_FILE_VAR_DATA=$(cat "$ENV_FILE_VAR_PATH")
+    export "$NEW_ENV_VAR"="$ENV_FILE_VAR_DATA"
+done
+
 # Sleep to make sure everything is fine...
 sleep 3
 
