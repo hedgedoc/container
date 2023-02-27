@@ -1,6 +1,5 @@
-FROM node:16.19.1-bullseye-slim@sha256:da6e286a8641b19f2fe64fe301840e96a6b335b667d19657edd9d13728f3c2cd AS base
+FROM --platform=$BUILDPLATFORM node:16.19.1-bullseye-slim@sha256:da6e286a8641b19f2fe64fe301840e96a6b335b667d19657edd9d13728f3c2cd AS builder
 
-FROM --platform=$BUILDPLATFORM base AS builder
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY
 ARG HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git
@@ -24,7 +23,7 @@ RUN yarn run build
 RUN yarn install --production=true --frozen-lockfile --network-timeout 1000000 --prefer-offline
 
 
-FROM base
+FROM node:16.19.1-bullseye-slim@sha256:da6e286a8641b19f2fe64fe301840e96a6b335b667d19657edd9d13728f3c2cd
 ARG UID=10000
 ENV NODE_ENV=production
 ENV UPLOADS_MODE=0700

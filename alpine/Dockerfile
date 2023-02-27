@@ -1,6 +1,5 @@
-FROM node:16.19.1-alpine@sha256:fcb03294d3c0695cf9762dec94c0366f08e7a8c6a3c1e062d38c80ac30684d8a AS base
+FROM --platform=$BUILDPLATFORM node:16.19.1-alpine@sha256:fcb03294d3c0695cf9762dec94c0366f08e7a8c6a3c1e062d38c80ac30684d8a AS builder
 
-FROM --platform=$BUILDPLATFORM base AS builder
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY
 ARG HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git
@@ -24,7 +23,7 @@ RUN yarn run build
 RUN yarn install --production=true --frozen-lockfile --network-timeout 1000000 --prefer-offline
 
 
-FROM base
+FROM node:16.19.1-alpine@sha256:95a849eafc573ad0d972fd67c569369e7aa94d55a21ede3b972e3137e5f8e43a
 ARG UID=10000
 ENV NODE_ENV=production
 ENV UPLOADS_MODE=0700
