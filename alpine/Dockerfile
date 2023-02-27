@@ -18,6 +18,8 @@ RUN mv /hedgedoc/package.new.json /hedgedoc/package.json
 
 # Install app dependencies and build
 WORKDIR /hedgedoc
+#necessary on ARM because puppeteer doesn't provide a prebuilt binary
+ENV PUPPETEER_SKIP_DOWNLOAD=true
 RUN yarn install --production=false --frozen-lockfile --network-timeout 1000000 --prefer-offline
 RUN yarn run build
 RUN yarn install --production=true --frozen-lockfile --network-timeout 1000000 --prefer-offline
