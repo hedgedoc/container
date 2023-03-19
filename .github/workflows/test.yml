@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # v3
       - name: Build ${{ matrix.base }} image
-        run: docker build -f ${{ matrix.base }}/Dockerfile -t hedgedoc .
+        run: docker buildx build -f ${{ matrix.base }}/Dockerfile -t hedgedoc .
       - run: docker network create postgres
       - run: docker run --name postgres --network postgres -e POSTGRES_USER=hedgedoc -e POSTGRES_PASSWORD=password -e POSTGRES_DB=hedgedoc --net-alias database -d postgres:13.1
       - run: ./tests/chore/startContainer.sh

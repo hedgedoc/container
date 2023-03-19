@@ -4,7 +4,13 @@ on:
     branches: [main, master]
   schedule:
     - cron: "0 0 * * *"
+  pull_request:
+    branches: [main, master]
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.job }}
+  cancel-in-progress: true
 
 jobs:
   nightly:
@@ -41,10 +47,12 @@ jobs:
           context: .
           file: ./${{ matrix.base }}/Dockerfile
           labels: quay.expires-after=1w
+          cache-from: type=gha
+          cache-to: type=gha
           build-args: |
             VERSION=${{ env.HEDGEDOC_VERSION }}
-          platforms: linux/amd64
-          push: true
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: ${{ github.event_name == 'push' }}
           tags: |
             ${{ env.HEDGEDOC_IMAGE }}:${{ env.TODAY }}-${{ matrix.base }}
             ${{ env.HEDGEDOC_IMAGE }}:${{ matrix.base }}
