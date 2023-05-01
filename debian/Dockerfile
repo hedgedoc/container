@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:16.20.0-bullseye-slim@sha256:203cf4c2b8f4d912cac0e101fea531a5aae0116f42928da28f3cc9bd8e50817c AS builder
+FROM --platform=$BUILDPLATFORM docker.io/library/node:16.20.0-bullseye-slim@sha256:203cf4c2b8f4d912cac0e101fea531a5aae0116f42928da28f3cc9bd8e50817c AS builder
 
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY
@@ -30,7 +30,7 @@ RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn \
     yarn install --production=false --frozen-lockfile --network-timeout 1000000 --prefer-offline
 RUN yarn run build
 
-FROM node:16.20.0-bullseye-slim@sha256:203cf4c2b8f4d912cac0e101fea531a5aae0116f42928da28f3cc9bd8e50817c AS modules-installer
+FROM docker.io/library/node:16.20.0-bullseye-slim@sha256:203cf4c2b8f4d912cac0e101fea531a5aae0116f42928da28f3cc9bd8e50817c AS modules-installer
 WORKDIR /hedgedoc
 
 ENV NODE_ENV=production
@@ -46,7 +46,7 @@ RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
 RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn \
     yarn install --production=true --frozen-lockfile --network-timeout 1000000 --prefer-offline
 
-FROM node:16.20.0-bullseye-slim@sha256:203cf4c2b8f4d912cac0e101fea531a5aae0116f42928da28f3cc9bd8e50817c AS app
+FROM docker.io/library/node:16.20.0-bullseye-slim@sha256:203cf4c2b8f4d912cac0e101fea531a5aae0116f42928da28f3cc9bd8e50817c AS app
 WORKDIR /hedgedoc
 
 ARG UID=10000
