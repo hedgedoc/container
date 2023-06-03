@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:16.20.0-alpine@sha256:8d18e32fa398763c07407e9d407c64e6a3c2a18e9fa97362cfde669a6b6161ef AS builder
+FROM --platform=$BUILDPLATFORM node:20.2.0-alpine@sha256:f3fe00fbf0cd0660487f3133a2a4bf16d0778198fdc94a08eb6558ebf9c39f57 AS builder
 
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY
@@ -28,7 +28,7 @@ RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn \
     yarn install --production=false --frozen-lockfile --network-timeout 1000000 --prefer-offline
 RUN yarn run build
 
-FROM node:16.20.0-alpine@sha256:8d18e32fa398763c07407e9d407c64e6a3c2a18e9fa97362cfde669a6b6161ef AS modules-installer
+FROM node:20.2.0-alpine@sha256:f3fe00fbf0cd0660487f3133a2a4bf16d0778198fdc94a08eb6558ebf9c39f57 AS modules-installer
 WORKDIR /hedgedoc
 
 ENV NODE_ENV=production
@@ -43,7 +43,7 @@ RUN --mount=target=/var/cache/apk,type=cache,sharing=locked \
 RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn \
     yarn install --production=true --frozen-lockfile --network-timeout 1000000 --prefer-offline
 
-FROM node:16.20.0-alpine@sha256:8d18e32fa398763c07407e9d407c64e6a3c2a18e9fa97362cfde669a6b6161ef AS app
+FROM node:20.2.0-alpine@sha256:f3fe00fbf0cd0660487f3133a2a4bf16d0778198fdc94a08eb6558ebf9c39f57 AS app
 WORKDIR /hedgedoc
 
 ENV NODE_ENV=production
