@@ -12,7 +12,7 @@ jobs:
         base: [debian, alpine]
     env:
       # renovate: datasource=github-tags depName=hedgedoc/hedgedoc versioning=semver
-      HEDGEDOC_VERSION: 1.9.7
+      HEDGEDOC_VERSION: 1.9.8
       HEDGEDOC_IMAGE: quay.io/hedgedoc/hedgedoc
     steps:
       - name: Checkout
@@ -45,6 +45,6 @@ jobs:
           file: ./${{ matrix.base }}/Dockerfile
           build-args: |
             VERSION=${{ env.HEDGEDOC_VERSION }}
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ env.TAGS }}
