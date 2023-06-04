@@ -14,9 +14,9 @@ jobs:
     env:
       BASE: ${{ matrix.base }} # needed in tests/version.sh
     steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3
       - name: Build ${{ matrix.base }} image
-        run: docker build -f ${{ matrix.base }}/Dockerfile -t hedgedoc .
+        run: docker buildx build -f ${{ matrix.base }}/Dockerfile -t hedgedoc .
       - run: docker network create postgres
       - run: docker run --name postgres --network postgres -e POSTGRES_USER=hedgedoc -e POSTGRES_PASSWORD=password -e POSTGRES_DB=hedgedoc --net-alias database -d postgres:13.1
       - run: ./tests/chore/startContainer.sh

@@ -1,14 +1,19 @@
-FROM node:16.19.1-alpine@sha256:95a849eafc573ad0d972fd67c569369e7aa94d55a21ede3b972e3137e5f8e43a AS base
+FROM --platform=$BUILDPLATFORM node:20.2.0-alpine@sha256:f3fe00fbf0cd0660487f3133a2a4bf16d0778198fdc94a08eb6558ebf9c39f57 AS builder
 
-FROM base AS builder
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY
 ARG HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git
 ARG VERSION=master
+#necessary on ARM because puppeteer doesn't provide a prebuilt binary
+ENV PUPPETEER_SKIP_DOWNLOAD=true
+ENV YARN_CACHE_FOLDER=/tmp/.yarn
+
 RUN if [ -n "${CODIMD_REPOSITORY}" ]; then echo "CODIMD_REPOSITORY is deprecated. Please use HEDGEDOC_REPOSITORY instead" && exit 1; fi
 
 # Clone the source and remove git repository but keep the HEAD file
-RUN apk update && apk add git jq python3 build-base
+RUN --mount=target=/var/cache/apk,type=cache,sharing=locked \
+    apk update && \
+    apk add git jq python3 build-base
 RUN git clone --depth 1 --branch "$VERSION" "$HEDGEDOC_REPOSITORY" /hedgedoc
 RUN git -C /hedgedoc log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1
 RUN git -C /hedgedoc rev-parse HEAD > /tmp/gitref
@@ -19,20 +24,36 @@ RUN mv /hedgedoc/package.new.json /hedgedoc/package.json
 
 # Install app dependencies and build
 WORKDIR /hedgedoc
-RUN yarn install --production=false --pure-lockfile
+RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn yarn install --immutable
 RUN yarn run build
-RUN yarn install --production=true --pure-lockfile
 
+FROM node:20.2.0-alpine@sha256:f3fe00fbf0cd0660487f3133a2a4bf16d0778198fdc94a08eb6558ebf9c39f57 AS modules-installer
+WORKDIR /hedgedoc
 
-FROM base
-ARG UID=10000
 ENV NODE_ENV=production
+ENV YARN_CACHE_FOLDER=/tmp/.yarn
+
+COPY --from=builder /hedgedoc /hedgedoc
+
+RUN --mount=target=/var/cache/apk,type=cache,sharing=locked \
+    apk update && \
+    apk add git python3 build-base
+
+RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn yarn workspaces focus --production
+
+FROM node:20.2.0-alpine@sha256:f3fe00fbf0cd0660487f3133a2a4bf16d0778198fdc94a08eb6558ebf9c39f57 AS app
+WORKDIR /hedgedoc
+
+ENV NODE_ENV=production
+ARG UID=10000
 ENV UPLOADS_MODE=0700
+
+RUN apk add --no-cache --no-progress --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ gosu
 
 # Create hedgedoc user
 RUN adduser -u $UID -h /hedgedoc/ -D -S hedgedoc
 
-COPY --chown=$UID --from=builder /hedgedoc /hedgedoc
+COPY --chown=$UID --from=modules-installer /hedgedoc /hedgedoc
 
 # Add configuraton files
 COPY ["resources/config.json", "/files/"]
@@ -44,14 +65,10 @@ HEALTHCHECK --interval=15s CMD node healthcheck.mjs
 # For backwards compatibility
 RUN ln -s /hedgedoc /codimd
 
-# Install all dependencies and build project
-RUN apk add --no-cache --no-progress --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ gosu
-
 # Symlink configuration files
 RUN rm -f /hedgedoc/config.json
 RUN ln -s /files/config.json /hedgedoc/config.json
 
-WORKDIR /hedgedoc
 EXPOSE 3000
 
 COPY ["resources/docker-entrypoint.sh", "/usr/local/bin/docker-entrypoint.sh"]

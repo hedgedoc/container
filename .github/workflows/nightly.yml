@@ -4,7 +4,13 @@ on:
     branches: [main, master]
   schedule:
     - cron: "0 0 * * *"
+  pull_request:
+    branches: [main, master]
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.job }}
+  cancel-in-progress: true
 
 jobs:
   nightly:
@@ -17,7 +23,7 @@ jobs:
       HEDGEDOC_IMAGE: quay.io/hedgedoc/hedgedoc-nightly
     steps:
       - name: Checkout
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3
 
       - name: Set date
         run: echo TODAY=$(date +%Y%m%d) >> $GITHUB_ENV
@@ -26,7 +32,7 @@ jobs:
         uses: docker/setup-qemu-action@e81a89b1732b9c48d79cd809d8d81d79c4647a18 # tag=v2
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@f03ac48505955848960e80bbb68046aa35c7b9e7 # v2
+        uses: docker/setup-buildx-action@4b4e9c3e2d4531116a6f8ba8e71fc6e2cb6e6c8c # v2
 
       - name: Login to docker registry
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # tag=v2
@@ -41,10 +47,12 @@ jobs:
           context: .
           file: ./${{ matrix.base }}/Dockerfile
           labels: quay.expires-after=1w
+          cache-from: type=gha
+          cache-to: type=gha
           build-args: |
             VERSION=${{ env.HEDGEDOC_VERSION }}
-          platforms: linux/amd64
-          push: true
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name == 'push' }}
           tags: |
             ${{ env.HEDGEDOC_IMAGE }}:${{ env.TODAY }}-${{ matrix.base }}
             ${{ env.HEDGEDOC_IMAGE }}:${{ matrix.base }}
