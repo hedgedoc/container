@@ -51,7 +51,7 @@ jobs:
           cache-to: type=gha
           build-args: |
             VERSION=${{ env.HEDGEDOC_VERSION }}
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name == 'push' }}
           tags: |
             ${{ env.HEDGEDOC_IMAGE }}:${{ env.TODAY }}-${{ matrix.base }}

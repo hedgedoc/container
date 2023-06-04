@@ -24,8 +24,7 @@ RUN mv /hedgedoc/package.new.json /hedgedoc/package.json
 
 # Install app dependencies and build
 WORKDIR /hedgedoc
-RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn \
-    yarn install --production=false --frozen-lockfile --network-timeout 1000000 --prefer-offline
+RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn yarn install --immutable
 RUN yarn run build
 
 FROM node:20.2.0-alpine@sha256:f3fe00fbf0cd0660487f3133a2a4bf16d0778198fdc94a08eb6558ebf9c39f57 AS modules-installer
@@ -40,8 +39,7 @@ RUN --mount=target=/var/cache/apk,type=cache,sharing=locked \
     apk update && \
     apk add git python3 build-base
 
-RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn \
-    yarn install --production=true --frozen-lockfile --network-timeout 1000000 --prefer-offline
+RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn yarn workspaces focus --production
 
 FROM node:20.2.0-alpine@sha256:f3fe00fbf0cd0660487f3133a2a4bf16d0778198fdc94a08eb6558ebf9c39f57 AS app
 WORKDIR /hedgedoc

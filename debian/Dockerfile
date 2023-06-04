@@ -26,8 +26,7 @@ RUN mv /hedgedoc/package.new.json /hedgedoc/package.json
 # Install app dependencies and build
 WORKDIR /hedgedoc
 
-RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn \
-    yarn install --production=false --frozen-lockfile --network-timeout 1000000 --prefer-offline
+RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn yarn install --immutable
 RUN yarn run build
 
 FROM node:20.2.0-bullseye-slim@sha256:dc1906714d1993d291e1e7b5f236291236b0a0b6dfacdb164e4a9ea44d09c52e AS modules-installer
@@ -43,8 +42,7 @@ RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
     apt-get update && \
     apt-get install --no-install-recommends -y git ca-certificates python-is-python3 build-essential
 
-RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn \
-    yarn install --production=true --frozen-lockfile --network-timeout 1000000 --prefer-offline
+RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn yarn workspaces focus --production
 
 FROM node:20.2.0-bullseye-slim@sha256:dc1906714d1993d291e1e7b5f236291236b0a0b6dfacdb164e4a9ea44d09c52e AS app
 WORKDIR /hedgedoc
