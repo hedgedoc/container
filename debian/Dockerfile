@@ -65,7 +65,7 @@ COPY ["resources/config.json", "/files/"]
 
 # Healthcheck
 COPY --chown=$UID /resources/healthcheck.mjs /hedgedoc/healthcheck.mjs
-HEALTHCHECK --interval=5s CMD node healthcheck.mjs
+HEALTHCHECK --interval=15s CMD node healthcheck.mjs
 
 # For backwards compatibility
 RUN ln -s /hedgedoc /codimd
