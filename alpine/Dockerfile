@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:20.3.0-alpine@sha256:30d5045fa5026abaed7439b62d51f73ac3efd1009496271d4c85fd83bb20144e AS builder
+FROM --platform=$BUILDPLATFORM docker.io/library/node:20.3.0-alpine@sha256:30d5045fa5026abaed7439b62d51f73ac3efd1009496271d4c85fd83bb20144e AS builder
 
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY
@@ -27,7 +27,7 @@ WORKDIR /hedgedoc
 RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn yarn install --immutable
 RUN yarn run build
 
-FROM node:20.3.0-alpine@sha256:30d5045fa5026abaed7439b62d51f73ac3efd1009496271d4c85fd83bb20144e AS modules-installer
+FROM docker.io/library/node:20.3.0-alpine@sha256:30d5045fa5026abaed7439b62d51f73ac3efd1009496271d4c85fd83bb20144e AS modules-installer
 WORKDIR /hedgedoc
 
 ENV NODE_ENV=production
@@ -41,7 +41,7 @@ RUN --mount=target=/var/cache/apk,type=cache,sharing=locked \
 
 RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn yarn workspaces focus --production
 
-FROM node:20.3.0-alpine@sha256:30d5045fa5026abaed7439b62d51f73ac3efd1009496271d4c85fd83bb20144e AS app
+FROM docker.io/library/node:20.3.0-alpine@sha256:30d5045fa5026abaed7439b62d51f73ac3efd1009496271d4c85fd83bb20144e AS app
 WORKDIR /hedgedoc
 
 ENV NODE_ENV=production
