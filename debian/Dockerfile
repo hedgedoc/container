@@ -45,6 +45,13 @@ RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
 RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn yarn workspaces focus --production
 
 FROM docker.io/library/node:20.3.0-bullseye-slim@sha256:4c4d1930c335191ebcf049eec6a4d35571b1fb9468ab0b8a403724c1a6d23f58 AS app
+
+LABEL org.opencontainers.image.title='HedgeDoc production image(debian)'
+LABEL org.opencontainers.image.url='https://hedgedoc.org'
+LABEL org.opencontainers.image.source='https://github.com/hedgedoc/container'
+LABEL org.opencontainers.image.documentation='https://github.com/hedgedoc/container/blob/master/README.md'
+LABEL org.opencontainers.image.licenses='AGPL-3.0'
+
 WORKDIR /hedgedoc
 
 ARG UID=10000
