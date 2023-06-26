@@ -42,6 +42,13 @@ RUN --mount=target=/var/cache/apk,type=cache,sharing=locked \
 RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn yarn workspaces focus --production
 
 FROM docker.io/library/node:20.3.0-alpine@sha256:9c92cf1a355d10af63a57d2c71034a6ba36a571d9a83be354c0422f1e7ef6cec AS app
+
+LABEL org.opencontainers.image.title='HedgeDoc production image(alpine)'
+LABEL org.opencontainers.image.url='https://hedgedoc.org'
+LABEL org.opencontainers.image.source='https://github.com/hedgedoc/container'
+LABEL org.opencontainers.image.documentation='https://github.com/hedgedoc/container/blob/master/README.md'
+LABEL org.opencontainers.image.licenses='AGPL-3.0'
+
 WORKDIR /hedgedoc
 
 ENV NODE_ENV=production
