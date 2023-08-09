@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM docker.io/library/node:20.5.0-alpine@sha256:59ecf4c430fc6e15b3e6f2ee3ae8fa9773b2508856baf376fcd9ad7b1e6934a9 AS builder
+FROM --platform=$BUILDPLATFORM docker.io/library/node:20.5.0-alpine@sha256:423dfd241dde92f10952be0d33dc3cea24015bfd85c8866050a83e2786535db0 AS builder
 
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY
@@ -27,7 +27,7 @@ WORKDIR /hedgedoc
 RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn yarn install --immutable
 RUN yarn run build
 
-FROM docker.io/library/node:20.5.0-alpine@sha256:59ecf4c430fc6e15b3e6f2ee3ae8fa9773b2508856baf376fcd9ad7b1e6934a9 AS modules-installer
+FROM docker.io/library/node:20.5.0-alpine@sha256:423dfd241dde92f10952be0d33dc3cea24015bfd85c8866050a83e2786535db0 AS modules-installer
 WORKDIR /hedgedoc
 
 ENV NODE_ENV=production
@@ -41,7 +41,7 @@ RUN --mount=target=/var/cache/apk,type=cache,sharing=locked \
 
 RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn yarn workspaces focus --production
 
-FROM docker.io/library/node:20.5.0-alpine@sha256:59ecf4c430fc6e15b3e6f2ee3ae8fa9773b2508856baf376fcd9ad7b1e6934a9 AS app
+FROM docker.io/library/node:20.5.0-alpine@sha256:423dfd241dde92f10952be0d33dc3cea24015bfd85c8866050a83e2786535db0 AS app
 
 LABEL org.opencontainers.image.title='HedgeDoc production image(alpine)'
 LABEL org.opencontainers.image.url='https://hedgedoc.org'
