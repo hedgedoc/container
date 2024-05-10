@@ -6,7 +6,7 @@ services:
   database:
     # Don't upgrade PostgreSQL by simply changing the version number
     # You need to migrate the Database to the new PostgreSQL version
-    image: postgres:15.3-alpine
+    image: postgres:15.7-alpine
     #mem_limit: 256mb         # version 2 only
     #memswap_limit: 512mb     # version 2 only
     #read_only: true          # not supported in swarm mode please enable along with tmpfs
