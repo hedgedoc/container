@@ -39,7 +39,7 @@ jobs:
         run: echo "TAGS=$TAGS,$HEDGEDOC_IMAGE:${{ env.HEDGEDOC_VERSION }},$HEDGEDOC_IMAGE:latest" >> $GITHUB_ENV
 
       - name: Build and push image
-        uses: docker/build-push-action@0a97817b6ade9f46837855d676c4cca3a2471fc9 # v4
+        uses: docker/build-push-action@94f8f8c2eec4bc3f1d78c1755580779804cb87b2 # v6
         with:
           context: .
           file: ./${{ matrix.base }}/Dockerfile
