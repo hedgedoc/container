@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM docker.io/library/node:20.7.0-bullseye-slim@sha256:86ed0f70880231adc0fb66c2edbba5de350d8587999e2fe4e1f59c11a4cbb3b4 AS builder
+FROM --platform=$BUILDPLATFORM docker.io/library/node:20.15.0-bullseye-slim@sha256:70091ea8b98a119de348636d83d186f2245a79a63dd4d1ba14f7ffe4e0b424b7 AS builder
 
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY
@@ -29,7 +29,7 @@ WORKDIR /hedgedoc
 RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn yarn install --immutable
 RUN yarn run build
 
-FROM docker.io/library/node:20.7.0-bullseye-slim@sha256:86ed0f70880231adc0fb66c2edbba5de350d8587999e2fe4e1f59c11a4cbb3b4 AS modules-installer
+FROM docker.io/library/node:20.15.0-bullseye-slim@sha256:70091ea8b98a119de348636d83d186f2245a79a63dd4d1ba14f7ffe4e0b424b7 AS modules-installer
 WORKDIR /hedgedoc
 
 ENV NODE_ENV=production
@@ -44,7 +44,7 @@ RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
 
 RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn yarn workspaces focus --production
 
-FROM docker.io/library/node:20.7.0-bullseye-slim@sha256:86ed0f70880231adc0fb66c2edbba5de350d8587999e2fe4e1f59c11a4cbb3b4 AS app
+FROM docker.io/library/node:20.15.0-bullseye-slim@sha256:70091ea8b98a119de348636d83d186f2245a79a63dd4d1ba14f7ffe4e0b424b7 AS app
 
 LABEL org.opencontainers.image.title='HedgeDoc production image(debian)'
 LABEL org.opencontainers.image.url='https://hedgedoc.org'
