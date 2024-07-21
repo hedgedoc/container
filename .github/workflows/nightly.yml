@@ -50,7 +50,7 @@ jobs:
           build-args: |
             VERSION=${{ env.HEDGEDOC_VERSION }}
           platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name == 'push' }}
+          push: true
           tags: |
             ${{ env.HEDGEDOC_IMAGE }}:${{ env.TODAY }}-${{ matrix.base }}
             ${{ env.HEDGEDOC_IMAGE }}:${{ matrix.base }}
