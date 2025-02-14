@@ -39,6 +39,8 @@ COPY --from=builder /hedgedoc /hedgedoc
 
 RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
     --mount=target=/var/cache/apt,type=cache,sharing=locked \
+    rm /var/lib/dpkg/info/libc-bin.* && \
+    apt-get clean && \
     apt-get update && \
     apt-get install --no-install-recommends -y git ca-certificates python-is-python3 build-essential
 
