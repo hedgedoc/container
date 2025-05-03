@@ -12,8 +12,7 @@ RUN if [ -n "${CODIMD_REPOSITORY}" ]; then echo "CODIMD_REPOSITORY is deprecated
 
 # Clone the source and remove git repository but keep the HEAD file
 RUN --mount=target=/var/cache/apk,type=cache,sharing=locked \
-    apk update && \
-    apk add git jq python3 build-base
+    apk add --no-cache git jq python3 build-base
 RUN git clone --depth 1 --branch "$VERSION" "$HEDGEDOC_REPOSITORY" /hedgedoc
 RUN git -C /hedgedoc log --pretty=format:'%ad %h %d' --abbrev-commit --date=short -1
 RUN git -C /hedgedoc rev-parse HEAD > /tmp/gitref
@@ -36,8 +35,7 @@ ENV YARN_CACHE_FOLDER=/tmp/.yarn
 COPY --from=builder /hedgedoc /hedgedoc
 
 RUN --mount=target=/var/cache/apk,type=cache,sharing=locked \
-    apk update && \
-    apk add git python3 build-base
+    apk add --no-cache git python3 build-base
 
 RUN --mount=type=cache,sharing=locked,target=/tmp/.yarn yarn workspaces focus --production
 
