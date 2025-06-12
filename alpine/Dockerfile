@@ -51,20 +51,22 @@ WORKDIR /hedgedoc
 
 ENV NODE_ENV=production
 ARG UID=10000
+ARG GID=10000
 ENV UPLOADS_MODE=0700
 
 RUN apk add --no-cache --no-progress --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ gosu
 
-# Create hedgedoc user
-RUN adduser -u $UID -h /hedgedoc/ -D -S hedgedoc
+# Create hedgedoc user and group
+RUN addgroup -g $GID hedgedoc && \
+    adduser -u $UID -h /hedgedoc/ -D -S hedgedoc -G hedgedoc
 
-COPY --chown=$UID --from=modules-installer /hedgedoc /hedgedoc
+COPY --chown=$UID:$GID --from=modules-installer /hedgedoc /hedgedoc
 
 # Add configuraton files
 COPY ["resources/config.json", "/files/"]
 
 # Healthcheck
-COPY --chown=$UID /resources/healthcheck.mjs /hedgedoc/healthcheck.mjs
+COPY --chown=$UID:$GID /resources/healthcheck.mjs /hedgedoc/healthcheck.mjs
 HEALTHCHECK --interval=15s CMD node healthcheck.mjs
 
 # For backwards compatibility
