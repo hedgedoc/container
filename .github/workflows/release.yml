@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        base: [debian, alpine]
+        base: [debian, alpine, distroless]
     env:
       # renovate: datasource=github-tags depName=hedgedoc/hedgedoc versioning=semver
       HEDGEDOC_VERSION: 1.10.4
