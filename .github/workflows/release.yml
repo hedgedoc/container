@@ -12,7 +12,7 @@ jobs:
         base: [debian, alpine]
     env:
       # renovate: datasource=github-tags depName=hedgedoc/hedgedoc versioning=semver
-      HEDGEDOC_VERSION: 1.10.5
+      HEDGEDOC_VERSION: 1.10.6
       HEDGEDOC_IMAGE: quay.io/hedgedoc/hedgedoc
     steps:
       - name: Checkout
