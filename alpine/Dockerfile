@@ -3,7 +3,7 @@ FROM --platform=$BUILDPLATFORM docker.io/library/node:24.11.1-alpine@sha256:6823
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY
 ARG HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git
-ARG VERSION=master
+ARG VERSION=release/1.10.5
 #necessary on ARM because puppeteer doesn't provide a prebuilt binary
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 ENV YARN_CACHE_FOLDER=/tmp/.yarn
