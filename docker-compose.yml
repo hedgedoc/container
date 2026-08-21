@@ -6,7 +6,7 @@ services:
   database:
     # Don't upgrade PostgreSQL by simply changing the version number
     # You need to migrate the Database to the new PostgreSQL version
-    image: postgres:18.4-alpine
+    image: postgres:18.6-alpine
     #mem_limit: 256mb         # version 2 only
     #memswap_limit: 512mb     # version 2 only
     #read_only: true          # not supported in swarm mode please enable along with tmpfs
@@ -29,7 +29,7 @@ services:
   #    # You should be able to upgrade MySQL without problems
   #    # but to make sure no even when a problem appears you
   #    # should have a backup
-  #    image: mariadb:10
+  #    image: mariadb:12
   #    environment:
   #      - MYSQL_USER=hedgedoc
   #      - MYSQL_PASSWORD=password
@@ -53,7 +53,7 @@ services:
     #  args:
     #    - "VERSION=master"
     #    - "HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git"
-    image: quay.io/hedgedoc/hedgedoc:1.11.1
+    image: quay.io/hedgedoc/hedgedoc:1.12.0
     #mem_limit: 256mb         # version 2 only
     #memswap_limit: 512mb     # version 2 only
     #read_only: true          # not supported in swarm mode, enable along with tmpfs
