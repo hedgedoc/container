@@ -1,4 +1,4 @@
-ARG NODE_IMAGE=docker.io/library/node:24.21.0-trixie-slim@sha256:173f125896c3b47ddf056734c7ea789d04595a6a08769a8f78e0df642781fb66
+ARG NODE_IMAGE=docker.io/library/node:24.22.1-trixie-slim@sha256:fdc9220097e0ae3bd947c44b10cd3af5867a67a6d3a23b30b30b70929219034e
 
 FROM --platform=$BUILDPLATFORM ${NODE_IMAGE} AS builder
 
