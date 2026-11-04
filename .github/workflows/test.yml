@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        base: [debian, alpine]
+        base: [debian, alpine, distroless]
     env:
       BASE: ${{ matrix.base }} # needed in tests/version.sh
     steps:
