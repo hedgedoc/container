@@ -5,7 +5,7 @@ FROM --platform=$BUILDPLATFORM ${NODE_IMAGE} AS builder
 # Build arguments to change source url, branch or tag
 ARG CODIMD_REPOSITORY
 ARG HEDGEDOC_REPOSITORY=https://github.com/hedgedoc/hedgedoc.git
-ARG VERSION=master
+ARG VERSION=release/1.12.0
 #necessary on ARM because puppeteer doesn't provide a prebuilt binary
 ENV PUPPETEER_SKIP_DOWNLOAD=true
 ENV YARN_CACHE_FOLDER=/tmp/.yarn
