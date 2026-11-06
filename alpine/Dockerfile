@@ -1,4 +1,4 @@
-ARG NODE_IMAGE=docker.io/library/node:24.22.1-alpine@sha256:6a1c190e17215d844926b0677f4bf87273ff7d5e54db06d3b5b5863ab0b09a3d
+ARG NODE_IMAGE=docker.io/library/node:26.13.0-alpine@sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216
 
 FROM --platform=$BUILDPLATFORM ${NODE_IMAGE} AS builder
 
